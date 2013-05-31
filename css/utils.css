@@ -1,0 +1,211 @@
+/* $Id: //dev/EPS/css/utils.css#18 $ */
+
+td.pi /* publishable info */
+{
+	width: 20%;
+	font-style: italic; 
+	font-size: 7pt
+}
+
+span.pi1 /* publishable */
+{
+color: green
+}
+
+span.pi2 /* unpublishable */
+{
+color: red
+}
+
+span.pi3 /* neither */
+{
+color: black
+}
+
+td.vl /* variable title */
+{
+	width: 65%;
+	text-align: center;
+	font-size: 16pt
+}
+
+tr { font-size: 8pt }
+
+.inp { font-size: 8pt; font-family:verdana, arial; width: 120px}
+
+.inp2 { font-size: 8pt; font-family:verdana, arial;}
+
+.inp_readonly{ font-size: 8pt; font-family:verdana, arial; width: 120px; color: gray}
+
+.gridtbl, .headertest, .celltest /* data tables in reports and non grid systems */
+{ 
+                text-align: left;
+                background-color: #FFFFFF;
+                border: 0px;
+                spacing: 0px;
+                padding: 0px;
+                border-collapse: collapse;
+                font-size: 8pt;
+                }
+
+.gridtbl .r1, .gridtbl .c1, .gridtbl .corner, .headertest /* column and row headers for data tables */
+{ 							
+								color: #000000;
+								background-color: #E0E7EE; 
+                font-family: verdana, arial, helvetica; 
+                font-weight: normal; 
+                border-left: 1px solid white; 
+                border-top: 1px solid white; 
+                border-bottom: 1px solid #BBBBBB; 
+                border-right: 1px solid #BBBBBB; 
+                padding:0px 5px 2px 5px; 
+                font-size: 8pt; }
+
+
+.gridtbl .r1 /* first row for data tables */
+{ text-align: center;}
+
+.gridtbl .c1 /* first column for data tables */
+{ text-align: right; white-space: nowrap;}
+
+.gridtbl .cell, .celltest
+{ 
+		padding: 0px; 
+		border-right: 1px solid #E0E7EE; 
+		border-bottom: 1px solid #E0E7EE; 
+		border-left: 1px solid #E0E7EE; 
+		border-top: 1px solid #FFFFFF;
+}
+
+.gridtbl .ocell 
+{ 
+	padding: 2px; 
+	border: 1px solid #E0E7EE;
+}
+
+.gridtbl input, .gridtbl .dd, .gridtbl div 
+{
+	margin: 0px; 
+	border: 0px; 
+	padding:2px 2px 2px 2px; 
+	font-size:8pt; 
+	font-family: verdana, arial, helvetica; 
+	text-align:right;
+}
+
+/* set a default width that works for checkboxes; all other cells will be resized dynamically */
+.gridtbl input, .gridtbl .dd {width: 2em;}
+
+.gridtbl input:focus {background-color: #DDDDDD;} /* does not work in IE */
+
+.gridtbl .dd {padding:0px; text-align: left;}
+
+.gridtbl textarea 
+{
+	margin: 0px; 
+	border:0px; 
+	padding:0px 0px 0px 0px; 
+	font-size: 8pt; 
+	font-family: verdana, arial, helvetica; 
+	text-align:left; 
+	height:1em; 
+	line-height:1em;}
+
+.rh2 /* row/column headers for data tables */
+{ background-color: #E0E7EE; font-weight: bold}
+
+.tbl /* screen area with node attribute and input and output information */
+{ background-color: #FFFFFF}
+
+.fh /* fixed (slicer-box) headings */
+{ white-space: nowrap; background-color: #EEEEEE; font-weight: bold}
+
+.rh /* row/column pivot headings */
+{ white-space: nowrap; background-color: #EEEEEE; font-weight: bold}
+
+.rh1 /* input and output node attribute names */
+{ font-weight: bold; white-space: nowrap; background-color: #EEEEEE}
+
+.rh1 a:link, .rh1 a:visited, .rh1 a:active
+{ text-decoration: none; color: #777777}
+
+.rh1 a:hover
+{ text-decoration: none ; color: #444444}
+
+.r0big 	/* odd rows of report headers */
+{ 
+	background-color: beige; 
+	font-size: 11pt; 
+	color: black
+}
+
+.r1big  	/* even rows of report headers */
+{ 
+	background-color: #FFFFFF; 
+	font-size: 11pt; 
+	color: black}
+
+.rb2	/* second row report bar */
+{
+	background-color: #666633; 
+	font-size: 8pt;
+	color: #E0E7EE;
+	font-family: Verdana, Arial
+}
+
+.butt 	/* buttons other than the comment button */
+{ 
+	font-size: 8pt; 
+	font-family:verdana, arial; 
+	width:100px
+}
+
+.buttw 	/* wide buttons  */
+{ 
+	font-size: 8pt; 
+	font-family:verdana, arial; 
+	width:125px
+}
+
+
+.buttc	/* comment button */
+{
+	font-size: 8pt;
+	font-family:verdana, arial;
+	width:100px
+}
+
+.dd1 /* pivot/group pull downs */
+{ 
+	font-size: 8pt; 
+	font-family:verdana, arial
+}
+
+
+td.v	/* input value when scalar */
+{
+	font-size: 10pt;
+}
+
+td.vo	/* output value when scalar */
+{
+	border: 1px solid #959F8D;
+	background-color: #FFFFFF;
+	font-size: 10pt;
+	
+}
+
+img.frameHandle
+{
+	position:absolute;
+	top:0px;
+	left:0px;
+	border:5px 1px 1px 1px solid white;
+  display:none;
+  zIndex:1000;
+  margin: 2px 2px 2px 2px;
+}
+
+fieldset {    /*this makes the fielset autoadjust to the size of the largest tables within the fieldset*/ 
+		display: inline-block;
+		} 

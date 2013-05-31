@@ -1,0 +1,22 @@
+/* styles for line graphs */
+.axis path, .axis line {
+  fill: none;
+  stroke: Black;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none; 
+/*  stroke: SteelBlue; */
+  stroke-width: 1.5px;
+}
+
+.dot {
+/*  fill: White; */
+/*  stroke: SteelBlue; */
+  stroke-width: 1.5px;
+}
+
+.simpleplot {
+    padding: 50px;
+}

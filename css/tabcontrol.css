@@ -1,0 +1,72 @@
+/* $Id: //depot/AnaBrowse/css/tabcontrol.css#11 $ */
+
+.up_titl_bdr /* row above the titlebar */
+{
+	height: 1px;
+	background-color: #CCCCCC
+ }
+
+.low_titl_bdr /* row below the titlebar */
+{
+	height: 2px;
+	background-color: #CCCCCC
+ }
+
+div.tabarea /* entire row of tabs */
+{	
+	width: 100%;
+	float:left; 
+	text-align: right;
+	font-weight: normal;
+	color: #FFFFFF;
+	background-color: #91A1B7;
+	border-top: 1px solid white;
+	border-bottom: 1px solid white;
+}
+
+div.ltabspace /* area to the left of the tabset. */
+{	
+	float:left;
+	width: 31px; 
+	background-color: #91A1B7;
+	padding: 3px 8px;
+}
+
+div.rtabspace /* area to the right of the tabset where the User: tag is. */
+{	
+	float:right; 
+	text-align: right;
+	font-weight: normal;
+	font-size: xx-small;
+	color: #FFFFFF;
+	background-color: #91A1B7;
+	padding: 3px 8px; 
+	margin-right: 10px;
+}
+
+/* first row gets a border on both sides */
+a.first {
+	border-left: 1px solid white; 
+}
+
+/* common tab properties */
+
+	a.tabsel, a.tabsel:hover, a.tabsel:visited, a.tabsel:active, a.tabdef, a.tabdef:hover, a.tabdef:visited, a.tabdef:active {
+		padding: 3px 8px;
+		display: block; 
+		float:left;  
+		border-right: 1px solid white;
+		font-weight: bold; 
+		color: #FFFFFF; 
+		text-decoration: none;
+	}
+
+	a.tabsel, a.tabdef:hover, a.tabdef:active /* the background color for the selected or hovered tab */
+	{
+		background-color: #50647F;
+	}
+
+	a.tabdef  /* the background color for unselected tabs */
+	{
+		background-color: #91A1B7;
+	}	

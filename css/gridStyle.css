@@ -1,0 +1,340 @@
+.Grid 
+{ 
+  background-image: url(images/grid_bg.gif); 
+  background-color: #FFFFFF; 
+  border: 0px solid #C0C0C0; 
+  border-top-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  cursor: pointer; 
+}
+
+.GridHeader
+{
+  background-image: url(images/grid_headerBg.gif); 
+  background-color: #EEEEEE; 
+  border: 0px solid #57566F; 
+  height: 28px;
+  padding-left: 3px;
+  cursor: default; 
+}
+
+.GridHeaderText
+{
+  color: #000000;  
+  font-family: verdana; 
+  font-size: 10px; 
+}
+
+.GroupByText
+{
+  color: #000000; 
+  font-size: 11px;   
+  font-weight: bold; 
+  padding-right: 5px;
+}
+
+.GridFooter
+{ 
+  
+  padding: 5px;
+  background-color: #EEEEEE; 
+}
+
+.GridFooterText
+{
+  color: #000000;  
+  font-family: verdana; 
+  font-size: 11px;
+}
+#Grid_ProjList_dom input, #PortSnapshots1_Grid_PortSS_dom input, #Grid_SnapMgmt_dom input, #Grid_WkspView_dom input, #Grid_PortList_dom input
+{ /* checkbox without padding */
+margin:0;width:13px;height:13px;overflow:hidden;
+}
+
+.Row 
+{ 
+  cursor: default; 
+}
+
+.Row td.DataCell 
+{ 
+  padding: 2px; 
+  border-right: 1px solid #E6E6E6; 
+  border-bottom: 1px solid #E6E6E6; 
+  font-family: verdana; 
+  font-size: 10px; 
+  cursor: default; 
+} 
+
+.Row td.FirstDataCell 
+{ 
+  padding-left: 3px; 
+  cursor: default;
+  font-family: verdana; 
+  font-size: 10px;
+} 
+
+.AlternatingRow 
+{ 
+  cursor: default; 
+}
+
+.AlternatingRow td.DataCell 
+{ 
+  background-color: #F6F6F8; 
+  padding: 2px; 
+  border-right: 1px solid #E6E6E6; 
+  border-bottom: 1px solid #E6E6E6; 
+  font-family: verdana; 
+  font-size: 10px;
+  cursor: default; 
+} 
+
+.AlternatingRow td.FirstDataCell 
+{ 
+  background-color: #F6F6F8; 
+  padding-left: 3px;
+  font-family: verdana; 
+  font-size: 10px;
+  cursor: default; 
+} 
+
+.HoverRow 
+{ 
+  cursor: default; 
+}
+
+.HoverRow td.DataCell 
+{ 
+  background-color: #E6E6EE; 
+  padding: 2px; 
+  padding-right: 3px; 
+  border-right: 0px; 
+  border-bottom: 1px solid #E6E6E6; 
+  font-family: verdana; 
+  font-size: 10px; 
+  cursor: default; 
+} 
+
+.HoverRow td.FirstDataCell 
+{ 
+  padding-left: 3px; 
+} 
+
+.HoverRow td.LastDataCell 
+{ 
+  padding-right: 2px; 
+} 
+
+.HeadingRow 
+{ 
+}
+
+.HeadingRow td.FirstHeadingCell
+{ 
+  background-color: #D6D7E1; 
+  background-image: url(images/header1stCell_bg.gif); 
+  padding-left: 0px;
+  padding-right: 5px;
+  border-width: 0px; 
+  border-right: 1px solid #FFFFFF; 
+}
+
+.HeadingRow td.LastHeadingCell
+{ 
+  background-color: #D6D7E1; 
+  background-image: url(images/header_bg.gif); 
+
+  border-width: 0px; 
+  border-right: 1px solid #EEEEEE; 
+}
+
+.HeadingCell 
+{ 
+  background-color: #D6D7E1; 
+  background-image: url(images/header_bg.gif); 
+  border-width: 0px; 
+  padding: 2px;
+  border-right: 1px solid #FFFFFF; 
+}
+
+.GroupHeading
+{ 
+  background-image: url(images/groupHeader_bg.gif); 
+  padding: 5px; 
+  padding-bottom:4px; 
+  padding-left:15px; 
+  border-width: 0px; 
+  border-right: 1px solid #9495A2; 
+  font-family: verdana; 
+  font-size: 10px; 
+  font-weight: bold; 
+  text-align: left;
+}
+
+
+.HeadingCellText
+{
+  font-family: verdana; 
+  font-size: 10px; 
+  font-weight: bold; 
+  text-align: left;
+  padding: 5px;
+  padding-left: 3px;
+}
+
+.HeadingCell td
+{ 
+  font-family: verdana; 
+  font-size: 10px; 
+  font-weight: bold; 
+  text-align: left;
+}
+
+
+.HeadingSelectorCell
+{ 
+  cursor: default; 
+  background-color: #D6D7E1; 
+  background-image: url(images/headingSelectorCell_bg.gif); 
+  height:21px;
+}
+
+.SelectorCell 
+{ 
+  cursor: default; 
+  background-color: #D6D7E1; 
+  background-image: url(images/selectorCell_bg.gif); 
+  height:21px;
+}
+
+.SelectedRow 
+{ 
+  cursor: default; 
+}
+
+.SelectedRow td.DataCell 
+{ 
+  padding: 2px; 
+  font-family: verdana; 
+  font-size: 10px; 
+  border-bottom: 1px solid #4B4B6F; 
+  border-top: 1px solid #4B4B6F; 
+  border-right: 0px; 
+  cursor: default; 
+}
+
+.SelectedRow td.FirstDataCell 
+{ 
+  border-left: 1px solid #4B4B6F; 
+  border-right: 0px; 
+  padding-right: 3px; 
+  cursor: default; 
+}
+
+.SelectedRow td.LastDataCell 
+{ 
+  border-right: 1px solid #4B4B6F; 
+  cursor: default; 
+}
+
+.SliderPopup
+{
+  background-color: #E6E6EE; 
+  border: 1px solid #4B4B6F; 
+  border-top-color: #9495A2; 
+  border-left-color: #9495A2; 
+  font-size: 11px; 
+  font-family: Verdana;
+  width: 150px;
+  height: 30px;
+}
+
+/* Style for filter form labels; filter is inactive or active */
+div .nofilt {
+  color: #868686;
+}
+
+div .filt {
+  color: #3366FF;
+}
+
+/* Style for workspace inputs on the grid in WkspView.aspx */
+.invalid {
+	font-weight: bold;
+	color: firebrick;
+}
+
+.showstopper {
+	font-weight: bold;
+	color: red;
+}
+
+.conflict {
+	font-weight: bold;
+	color: black;
+}
+
+.incomplete {
+	font-weight: bold;
+	color: firebrick;
+}
+
+.conflictime {
+	font-weight: bold;
+	color: black;
+}
+
+.unpublishable {
+	
+}
+
+a.invalid:link { color: firebrick; text-decoration: none}
+a.invalid:visited {	color: firebrick; text-decoration: none}	
+a.invalid:hover {color: firebrick; text-decoration: underline}
+
+a.showstopper:link { color: red; text-decoration: none}
+a.showstopper:visited {	color: red; text-decoration: none}	
+a.showstopper:hover { color: red; text-decoration: underline}
+
+a.incomplete:link { color: firebrick; text-decoration: none}
+a.incomplete:visited {	color: firebrick; text-decoration: none}	
+a.incomplete:hover { color: firebrick; text-decoration: underline}
+
+a.conflict:link { color: black; text-decoration: none}
+a.conflict:visited {	color: black; text-decoration: none}	
+a.conflict:hover { color: black;text-decoration: underline}
+
+a:link {color: #000099; font-weight: bold; text-decoration: none}
+a:visited {color: #000099;	font-weight: bold; text-decoration: none}	
+a:hover {color: #000099; font-weight: bold; text-decoration: underline}
+
+a.unpublishable:link { text-decoration: none}
+a.unpublishable:visited { text-decoration: none}	
+a.unpublishable:hover { text-decoration: underline}
+
+/* Style for workspace inputs on the grid in WkspView.aspx */
+.invalid {
+	font-weight: bold;
+	color: firebrick;
+}
+
+/* Style for the Link of user login name on User Management Grid */
+a.inactive_user:link { color: gray; text-decoration: none}
+a.inactive_user:visited { color: gray; text-decoration: none}	
+a.inactive_user:hover {color: gray; text-decoration: underline}
+
+a.orphan_user:link { color: firebrick; text-decoration: none}
+a.orphan_user:visited { color: firebrick; text-decoration: none}	
+a.orphan_user:hover {color: firebrick; text-decoration: underline}
+
+div#filterHolder div {height:60; float: left }
+div#ProjFilter1_filterHolder div {height:60; float: left }
+div#PortSnapshots1_SS_Filter1_filterHolder  div {height:60; float: left }
+div#DynPortCfgList1_filterHolder div {height:60; float: left }
+div#Grid_PortConfig_ProjFilter1_filterHolder div {height:60; float: left }
+div#Grid_UserMgmt_filterHolder div {height:60; float: left }
+div#Grid_WkspView_filterHolder div {height:60; float: left }
+div#Grid_GroupAdmin_filterHolder div {height:60; float: left }
+

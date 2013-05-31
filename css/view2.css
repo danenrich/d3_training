@@ -1,0 +1,95 @@
+﻿/* footer http://www.martinbean.co.uk/bootstrap/sticky-footer/ */
+#wrap > .container {
+  margin-bottom: 20px;
+}
+
+html, body {
+  height: 100%;
+}
+
+/* lame size overrides because i don't want to figure out LESS */
+body,
+select,
+input,
+input[type="text"],
+label,
+.table td,
+.btn,
+.btn-group > .btn {
+  font-size: 10px;
+  height: 16px;
+  min-height: 16px;
+  line-height: 14px;
+  font-family: verdana;
+  padding: 0px;
+}
+.row-fluid [class*="span"] {
+  min-height: 18px;
+}
+.form-horizontal .control-group {
+  margin-bottom: 0px;
+}
+thead {
+    background: LightGrey;
+}
+
+.table-condensed td {
+    padding: 2px 2px 2px 2px;
+}
+
+.table td.center{
+    text-align: center;
+}
+legend {
+    font-size: 14px;
+}
+
+/* end bootstrap overrides */
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -61px;
+}
+
+#footer {
+  height: 60px;
+}
+
+#push {
+  height: 61px;
+}
+
+#footer {
+  text-align: center;
+}
+
+#footer .container {
+  padding: 20px 0;
+  border-top: 1px solid #e7e7e7;
+}
+
+.pages {
+  padding: 5px;
+  display: inline-block;
+}
+
+.filters {
+  padding: 2px;
+}
+
+/* replace the 'slide down from top' thing i don't like */
+.modal.fade{
+    -webkit-transition: opacity .2s linear, none;
+    -moz-transition: opacity .2s linear, none;
+    -ms-transition: opacity .2s linear, none;
+    -o-transition: opacity .2s linear, none;
+    transition: opacity .2s linear, none;
+    top: 50%;
+}
+
+/* carousel captions seem to overlap the content */
+.carousel-caption {
+    position: static;
+}

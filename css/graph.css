@@ -1,0 +1,195 @@
+
+
+.grcenter
+{
+	text-align: center;
+	white-space: nowrap
+}
+.grleft
+{
+	text-align: left;
+	white-space: nowrap
+}
+
+.grright
+{
+	text-align: right;
+	white-space: nowrap
+}
+
+.gborder
+{
+	border: solid 1px;
+	border-color: #336666;
+	border-style: solid 
+}
+.gborderright
+{
+	border-right: solid 1px;
+	border-right-color: #336666;
+	border-right-style: solid 
+	
+}
+.gborderleft
+{
+	border-left: solid 1px;
+	border-left-color: #336666;
+	border-left-style: solid 	
+}
+.gtabselected
+{
+	width: 80px;
+	height: 25px;
+	background-color: Gray;
+	color: White;
+	text-align: center;
+	vertical-align: middle
+}
+.gtabnosel
+{
+	width: 80px;
+	height: 25px;
+	background-color: White;
+	color: Gray;
+	text-align: center;
+	vertical-align: middle
+}
+
+.gbutt 	/* graph buttons */
+{ 
+	font-size: 8pt; 
+	font-family:verdana, arial; 
+	width:125
+}
+
+.disbutt 	/* disabled color picker buttons */
+{ 
+	font-size: 8pt; 
+	font-family:verdana, arial; 
+	borderStyle:outset;
+	cursor:wait;
+	disabled:true;
+	width:125
+}
+.enbutt 	/* enabled color picker buttons */
+{ 
+	font-size: 8pt; 
+	font-family:verdana, arial; 
+	borderStyle:outset;
+	cursor:hand;
+	disabled:false;
+	width:125
+}
+
+
+
+
+.gdisabled
+{
+	FONT-SIZE: xx-small;
+	FONT-FAMILY: Verdana, Arial;
+	background-color: DFE4EA;
+	color: White
+}
+
+.gtxtnumber0	/* .r0 number text box  disabled */
+{
+	FONT-SIZE: xx-small;
+	FONT-FAMILY: Verdana, Arial;
+	background-color: DFE4EA;
+	color: white;
+	text-align: right;	
+	vertical-align: middle
+}
+
+.gtxtnumber1 /* .r1 number text box */
+{
+	FONT-SIZE: xx-small;
+	FONT-FAMILY: Verdana, Arial;
+	background-color: #FFFFFF;
+	color: black;
+	text-align: right;	
+	vertical-align: middle
+}
+
+
+/*  begin color picker styles */
+.cpotbl
+{
+	border: gainsboro 1px outset;
+	padding: 2px;
+	background-color: lightgrey;
+}
+
+.cpitbl
+{
+	padding: 2px;
+	font-size: 8pt;
+	vertical-align: middle;
+	background-color: lightgrey;
+	text-align: center;
+}
+
+.cptr
+{
+	height: 20px;
+	text-align: center;
+}
+
+.cptd
+{
+	width: 20px;
+	text-align: center;
+}
+
+.cpdiv
+{
+	border: gray 1px solid;
+	margin: 2px;
+	
+	cursor: hand;
+}
+
+.cpcust
+{
+	background-position: center center;
+	font-weight: bold;
+	background-image: url(images/custom-button.gif);
+	cursor: hand;
+	color: #000000;
+	position: static;
+	text-align: center;
+	padding-top: 4px;
+}
+
+.cpcustImg a:link, .cpcust a:visited, .cpcust a:active, .cpcust a:hover
+{ text-decoration: none; background-color: none; border-width: none; }
+
+.cpcustImg
+{
+	border:0px;
+}
+
+.cpInfo
+{
+	position: float;
+	border:0px;
+  float: right;
+  margin-right: 0; 	
+}
+
+
+
+.colorwellSpan
+{
+	visibility:hidden;
+	width:0px;
+	size:0px;
+}
+
+.colorwellTD
+{
+	width:0px;
+	size:0px;
+	display:;
+}
