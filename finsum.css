@@ -1,0 +1,13 @@
+﻿.interiorCells {
+    background-color: #cccccc;
+}
+
+.gridtbl .headers {
+    background-color: #ffffff;
+    border-right: 0px;
+    border-left: 0px;
+}
+
+.blueText {
+    color:blue;
+}
