@@ -16,42 +16,9 @@
     alert("You got me!");
     });
     */
-    /*
-    $('#Financial_summary_c td').filter(function () {
-    //return parseInt($(this).val().replace("$", ""), 10) > 0;
-    return $(this).html = "$20";
+
+    var $bigcells = $('#Financial_summary_c td').filter(function () {
+        return parseInt($(this).clone().children().remove().end().text().replace(/[^0-9\.\(\)-]+/g, ""), 10) > 0;
     }).css("color", "blue");
-    */
-    var $spam3 = $('#Financial_summary_c td:contains("see me")').clone().children().remove().end().text();
-    $('#Financial_summary_c td:contains("see me")').each(function () {
-        //$("#blah div").html($(this).clone().children().remove().end().text());
-        $("#blah div").html($spam3);
-    });
-
-    //$("#blah div").css("color", "blue");
-    //console.log($("#blah div").text);
-    /*
-    $('#Financial_summary_c td').each(function () {
-    $(this).click(function () {
-    //alert($(this).html);
-    if ($(this).html === "see me") {
-    var $var = "Yes";
-    }
-    else { var $var = "No"; }
-    $(this).html($var);
-    });
-    });
-    $('#Financial_summary_c td:contains("see me")').each(function () {
-    $(this).css("color", "blue");
-    var $len = $(this).text;
-    $("#blah").html($len);
-    $(this).html($len);
-    });
-    */
-    /*
-    $bigcells.hover(function () {
-    $(this).css("color", "blue");
-    });
-    */
-
+    
 });
