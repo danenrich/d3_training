@@ -18,7 +18,7 @@
     */
 
     var $bigcells = $('#Financial_summary_c td').filter(function () {
-        return parseInt($(this).clone().children().remove().end().text().replace(/[^0-9\.\(\)-]+/g, ""), 10) > 0;
+        return parseInt($(this).html().replace(/[^0-9\.\(\)-]+/g, ""), 10) > 0;
     }).css("color", "blue");
 
     //$('#Financial_summary_c tr:even td:not(:first-child)').css("background-color", "purple");
