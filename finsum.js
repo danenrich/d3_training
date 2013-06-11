@@ -74,6 +74,11 @@
 				});						
 			});
 
+			//Create the mouseover table placeholder
+			var mouseTable = $("<div>", {id: "mousey", text: "placeholder"});
+			$("#ratios").parents("div").append(mouseTable);
+			$("#mousey").addClass("hideMe");
+
 			//Create the ratios in table three
 			$("#ratios tr:gt(0)").each(function() {
 				$(this).children().not(":first").each(function() {
@@ -84,7 +89,15 @@
 					var colpos = $(this).index();
 					var denominator = parseInt($("#tabletwo tr:eq("+rowpos+") td:eq("+colpos+")").html().replace(/[^0-9\.-]+/g, ""), 10);
 					$(this).text(isNaN(denominator) ? "" : (100*numerator/denominator).toFixed(0) + "%");
+					//Create mouseover stuff
+					$(this).mouseover(function() {
+						var mouseloc = $(this).position();
+						$("#mousey").addClass("popupWin").offset({top: mouseloc.top -20, left: mouseloc.left+20}).text(isNaN(denominator) ? "" : numerator + "," + denominator);
+					});						
 				});						
 			});				
+
+			//Hide the first and second tables
+			$("table:lt(2)").hide();
 
 });
