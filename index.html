@@ -75,7 +75,7 @@ d3.csv("bingo_data.csv", function(error, data) {
   data.forEach(function(d) {
     d.y = +d.tas;
     d.x = +d.phases;
-    d.z = 5; //+d.npvs / 1000000;
+    d.z = Math.abs(d.npvs) / d3.max(data, function(d) { return d.y; }); //+d.npvs / 1000000;
   });
 
   x.domain(d3.extent(data, function(d) { return d.x; })).nice();
@@ -89,8 +89,10 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("class", "label")
       .attr("x", width)
       .attr("y", -6)
+      .attr("dy", "35px")
+      .attr("dx", "-480px")      
       .style("text-anchor", "end")
-      .text("Sepal Width (cm)");
+      .text("Phase");
 
   svg.append("g")
       .attr("class", "y axis")
@@ -99,9 +101,10 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("class", "label")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
-      .attr("dy", ".71em")
+      .attr("dy", "-30px")
+      .attr("dx", "-220px")
       .style("text-anchor", "end")
-      .text("Sepal Length (cm)")
+      .text("TA")
 
   svg.selectAll(".dot")
       .data(data)
@@ -117,6 +120,7 @@ d3.csv("bingo_data.csv", function(error, data) {
     .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
 
   legend.append("rect")
       .attr("x", width - 18)
