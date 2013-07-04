@@ -1,4 +1,4 @@
-{ From user Dan, Model Demo_portfolio_model at 2-Jul-2013 5:44:12 PM }
+{ From user Dan, Model Demo_portfolio_model at 3-Jul-2013 2:56:27 PM }
 SoftwareVersion 4.4.4
 
 
@@ -51,13 +51,13 @@ Title: Demo Portfolio Model
 Author: Enrich
 Date: Wed, Nov 15, 2000 10:27 AM
 SaveAuthor: Dan
-SaveDate: Tue, Jul 2, 2013 5:44 PM
+SaveDate: Wed, Jul 3, 2013 2:56 PM
 DefaultSize: 48,24
 DiagState: 2,12,-7,947,668,17
 WindState: 1,102,90
 DiagramColor: 65535,62257,52427
 FontStyle: Arial, 13
-FileInfo: 0,Model Demo_portfolio_model,2,2,0,0,C:\GIT_REPOS\d3_training\2013_Q2_REVIEW_7-2-2013_161.ANA
+FileInfo: 0,Model Demo_portfolio_model,2,2,0,0,C:\git\d3_training\bingo_data_source.ANA
 {!40400|Att_clearTypeFonts: 0}
 
 Text Te4
@@ -916,8 +916,7 @@ ValueState: 1,601,247,416,303,0,MIDM
 
 Variable Metrics_table_mp
 Title: Metrics Table MP
-Definition: Table(Metrics)(~
-Npv_mp,Enpv_mp,PTS_TO_USE_MP,COST_TO_LAUNCH_MP,Peak_revenue_mp,LAUNCH_YEAR_MP,ADJ_COST_LAUNCH_MP,Cost_budget_yr_mp,PV_REVENUE_MP,Enpv_npv_ratio_mp,Overall_score_mp)
+Definition: Table(Metrics)(Npv_mp,Enpv_mp,PTS_TO_USE_MP,COST_TO_LAUNCH_MP,Peak_revenue_mp,LAUNCH_YEAR_MP,ADJ_COST_LAUNCH_MP,Cost_budget_yr_mp,PV_REVENUE_MP,Enpv_npv_ratio_mp,Overall_score_mp)
 NodeLocation: 80,144,1
 NodeSize: 48,24
 WindState: 1,353,479
@@ -26657,7 +26656,7 @@ ValueState: 1,40,50,416,303,0,MIDM
 Variable Bingo_chart_data
 Title: Bingo Chart Data
 Description: This set of data has the very small values scaled
-Definition: Table(Bingo_xyz)(Proj_x_axis_val_fin ,Proj_y_axis_val_fin ,If Bubble_metric_bingo='No Value' then Relevant_projects_mp else Metrics_table_mp[Metrics=Bubble_metric_bingo]*Relevant_projects_mp )
+Definition: Table(Bingo_xyz)(Proj_x_axis_val_fin,Proj_y_axis_val_fin,If Bubble_metric_bingo='No Value' then Relevant_projects_mp else Metrics_table_mp[Metrics=Bubble_metric_bingo]*Relevant_projects_mp)
 NodeLocation: 1008,152,1
 NodeSize: 48,24
 WindState: 1,596,130
@@ -27088,7 +27087,7 @@ Close Risk_by_phase_by_ta
 Variable Risk_benchmarking_b1
 Title: Risk Benchmarking by Phase
 Definition: 'Risk Benchmarking by Phase'
-NodeLocation: 696,216,1
+NodeLocation: 696,368,1
 NodeSize: 48,29
 
 Variable Timeline
@@ -27233,18 +27232,18 @@ Flags: <flag attr="default_view" value="bubble"/>~
 
 Display_order: 22
 
-Objective Portfolio_landscape1
-Title: Portfolio Landscape
+Objective d3_Portfolio_Landsca
+Title: d3 Portfolio Landscape
 Units: $M
 Description: The x-axis and y-axis represent categories by which projects can be viewed. The bubble size can be chosen to represent eNPV, NPV, Cost to Launch or Peak Revenue. The color scheme can be chosen to represent project phase, project therapeutic area, key/non-key projects or priority/non-priority projects.  If the project bubble is too small to be displayed, it will be colored black.
-Definition: strat_bucket_clean[All_projects=Bingo_projects]
+Definition: mp_to_sp_(Table(d3_Bingo_Index)(all_projects ,Therapeutic_a ,phase_cleaned ,strat_bucket_clean ,Npv_mp ))
 NodeLocation: 696,152,1
 NodeSize: 48,24
 NodeInfo: 1,1,1,1,1,1,0,,0,
 WindState: 2,809,58,476,666
-DefnState: 1,334,415,608,303,0,MIDM
-ValueState: 2,338,258,416,303,0,MIDM
-ReformVal: [Bingo_projects,Bingo_xyz]
+DefnState: 2,688,610,608,303,0,MIDM
+ValueState: 2,338,258,788,646,0,MIDM
+ReformVal: [d3_Bingo_Index,Projects]
 I_o__type: output
 Flags: <flag attr="default_view" value="bubble"/>~
 <flag attr="xlabels" value="X_axis_index_bingo"/>~
@@ -27263,6 +27262,12 @@ Flags: <flag attr="default_view" value="bubble"/>~
 <flag attr="excelgraph" hide="true"/>~
 
 Display_order: 21
+
+Index d3_Bingo_Index
+Title: d3 Bingo Index
+Definition: ['names','tas','phases','strat_buckets','npvs']
+NodeLocation: 696,224,1
+NodeSize: 48,24
 
 Close Portfolio_balance
 

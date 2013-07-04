@@ -1,33 +1,33 @@
-names,phases,tas,npvs,strat_bucket
-Eaglogen,75,50,4736.336609,Considered
-Holitorcitus,53.33333333,30,2066.58106,Considered
-Varmenase,46.66666667,50,1694.596469,Considered
-Tikofermin,70,70,1262.576658,Committed
-Xumanase,10,90,1239.948636,Considered
-Matisem,33.33333333,50,1080.133034,Considered
-Reflitol,90,90,1047.067737,Committed
-Nifilmox,50,10,1033.29053,Considered
-Trivlexin,70,50,1024.497045,Considered
-Mrilipzor,70,90,1009.081649,Considered
-Prototase,53.33333333,50,910.0359748,Considered
-Estger,35,30,902.4070627,Considered
-Rilopof,32,90,868.8352785,Considered
-Metaphysis,46.66666667,30,722.2732004,Considered
-Mritigen,36,90,688.8603532,Considered
-Polgen,70,30,632.3738042,Committed
-Weglifil,25,30,593.1908287,Considered
-Resdexel,10,50,528.2713314,Potential
-Avniman,53.33333333,90,521.3846001,Considered
-Masogen,30,30,376.3365076,Potential
-Rytifil,90,10,361.3987914,Committed
-Mervisil,90,30,358.4157215,Committed
-Vrilimen,26.66666667,10,353.1369331,Considered
-Virtiman,10,30,350.4794818,Considered
-Creficil,90,50,339.8000853,Committed
-Rydovanil,28,90,310.4471038,Considered
-Meprylol,30,70,268.8117911,Considered
-OpthTank,33.33333333,10,268.8117911,Potential
-Refevel,46.66666667,90,267.6945869,Considered
-Zerxil,65,50,172.2133302,Considered
-Xyfigil,26.66666667,50,3.365848502,Potential
-Vrexigen,24,90,-8.810054253,Potential
+names,tas,phases,strat_buckets,npvs
+Avniman,CNS,Phase 2,Considered,521.3846001
+Creficil,Endocrine Disorder,NDA,Committed,339.8000853
+Eaglogen,Endocrine Disorder,Phase 3,Considered,4736.336609
+Estger,Immunology,Phase 1,Considered,902.4070627
+Holitorcitus,Immunology,Phase 2,Considered,2066.58106
+Masogen,Immunology,Phase 1,Potential,376.3365076
+Matisem,Endocrine Disorder,Phase 1,Considered,1080.133034
+Meprylol,Dermatology,Phase 1,Considered,268.8117911
+Mervisil,Immunology,NDA,Committed,358.4157215
+Metaphysis,Immunology,Phase 2,Considered,722.2732004
+Mrilipzor,CNS,Phase 3,Considered,1009.081649
+Mritigen,CNS,Phase 1,Considered,688.8603532
+Nifilmox,Ophthalmology,Phase 2,Considered,1033.29053
+OpthTank,Ophthalmology,Phase 1,Potential,268.8117911
+Polgen,Immunology,Phase 3,Committed,632.3738042
+Prototase,Endocrine Disorder,Phase 2,Considered,910.0359748
+Refevel,CNS,Phase 2,Considered,267.6945869
+Reflitol,CNS,NDA,Committed,1047.067737
+Resdexel,Endocrine Disorder,Preclinical,Potential,528.2713314
+Rilopof,CNS,Phase 1,Considered,868.8352785
+Rydovanil,CNS,Phase 1,Considered,310.4471038
+Rytifil,Ophthalmology,NDA,Committed,361.3987914
+Tikofermin,Dermatology,Phase 3,Committed,1262.576658
+Trivlexin,Endocrine Disorder,Phase 3,Considered,1024.497045
+Varmenase,Endocrine Disorder,Phase 2,Considered,1694.596469
+Virtiman,Immunology,Preclinical,Considered,350.4794818
+Vrexigen,CNS,Phase 1,Potential,-8.810054253
+Vrilimen,Ophthalmology,Phase 1,Considered,353.1369331
+Weglifil,Immunology,Phase 1,Considered,593.1908287
+Xumanase,CNS,Preclinical,Considered,1239.948636
+Xyfigil,Endocrine Disorder,Phase 1,Potential,3.365848502
+Zerxil,Endocrine Disorder,Phase 3,Considered,172.2133302
