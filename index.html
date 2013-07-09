@@ -22,38 +22,9 @@ body {
 <script type="text/javascript" src="d3/d3.v3.js"></script>
 <script>
  
- /*
-d3.csv("bingo_data.csv", function(error, root) {
-  d3.select("body").selectAll("div")
-                .data(dataset)
-                .enter()
-                .append("div")
-                .attr("class", "bar")
-});
-
-d3.csv("bingo_data.csv", function(d) {
-  return {
-    names: d.names, // convert "Year" column to Date
-    phases: d.phases,
-    tas: d.tas,
-    npvs: d.npvs // convert "Length" column to number
-  };
-}, function(error, rows) {
-  console.log(rows);
-});
-
- */
-
- 
-var margin = {top: 20, right: 20, bottom: 80, left: 80},
+var margin = {top: 20, right: 20, bottom: 80, left: 100},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
-
-var x = d3.scale.linear()
-    .range([0, width]);	
-
-var y = d3.scale.linear()
-    .range([height, 0]);
 
 var color = d3.scale.category10();
 
@@ -70,6 +41,11 @@ var yAxis = d3.svg.axis()
   .scale(yScale)
   .orient("left");  
 
+var xScale = d3.scale.ordinal().rangeRoundBands([width, 0]);
+
+var xAxis = d3.svg.axis()
+  .scale(xScale)
+  .orient("bottom");     
 
 d3.csv("bingo_data.csv", function(error, data) {
   data.forEach(function(d) {
@@ -79,24 +55,21 @@ d3.csv("bingo_data.csv", function(error, data) {
     d.sb = d.strat_buckets; 
   });
 	
-
+	//Get list of TAs for the y-axis
   var ta_list = d3.nest()
-    .key(function(d) { return d.y; }).sortKeys(d3.ascending) //["Cardio","Onc","Opth","Endo","Immu"];
+    .key(function(d) { return d.y; }).sortKeys(d3.ascending) 
     .entries(data);
 
-  x.domain(d3.extent(data, function(d) { return d.x; })).nice();
+	//Get list of Phases for the x-axis
+  var phase_list = d3.nest()
+    .key(function(d) { return d.x; }).sortKeys(d3.ascending) 
+    .entries(data);
+
+	//Set the x- and y-axis domains
+  xScale.domain(phase_list.map(function(d) { return d.key; }));
   yScale.domain(ta_list.map(function(d) { return d.key; }));
 
-  
-
-
-  d3.select("body").selectAll("div")
-              .data(ta_list)
-              .enter()
-              .append("div")
-              .html(function(d) {return d.key });
-               
-
+	//Write the y-axis
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
@@ -109,24 +82,7 @@ d3.csv("bingo_data.csv", function(error, data) {
       .style("text-anchor", "end")
       .text("TA")
 
-
-
-/*
-  var phase_list = d3.nest()
-    .key(function(d) { return d.x; }).sortKeys(d3.ascending) //["Cardio","Onc","Opth","Endo","Immu"];
-    .entries(data);
-
-
-  var xScale = d3.scale.ordinal()
-    .domain(phase_list.map(function (d) {return d; }))
-    .rangeRoundBands([0,width]);
-
-  var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient("bottom");     
-
-
-
+	//Write the x-axis
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
@@ -139,7 +95,6 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("dx", "-480px")      
       .style("text-anchor", "end")
       .text("Phase");
-*/
 
  	//variables for scaling the z-axis of the bubbles
   var max_size = 35;
