@@ -19,11 +19,10 @@ body {
 }
 
 .xgrid {
-  fill: black;
+  opacity: 0.3;
   stroke: #000;
   stroke-width:2;
 }
-
 
 </style>
 <body>
@@ -43,7 +42,7 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 //The scale analytics have to live outside of the .forEach function
-var padding = 0.1;
+var padding = 0;
 
 var yScale = d3.scale.ordinal().rangeRoundBands([0, height]);
 
@@ -55,7 +54,7 @@ var xScale = d3.scale.ordinal().rangeRoundBands([width, 0]);
 
 var xAxis = d3.svg.axis()
   .scale(xScale)
-  .orient("bottom");     
+  .orient("bottom");
 
 d3.csv("bingo_data.csv", function(error, data) {
   data.forEach(function(d) {
@@ -107,21 +106,21 @@ d3.csv("bingo_data.csv", function(error, data) {
       .text("Phase");
       
  //Create the x-grid
-    var xgrid = svg.selectAll('.xgrid').data(phase_list);  //Not sure should be selecting the svg here
+    var xgrid = svg.selectAll('.xgrid').data(phase_list.map(function(d) { return d.key; }));  //Not sure should be selecting the svg here
 
     xgrid.enter().append('line');
     xgrid.exit().remove();
 
     xgrid.attr('class','xgrid')
         .attr('x1', function(d){
-            return xScale(d) + xScale.rangeBand() /** (1 + padding / 2) */;})
+            return xScale(d) + xScale.rangeBand() * (1 + padding / 2) ;})
         .attr('x2', function(d){
             return xScale(d) + xScale.rangeBand() * (1 + padding / 2);})
         .attr('y1', yScale.rangeExtent()[0])
         .attr('y2', yScale.rangeExtent()[1]);
 
   d3.select("body").selectAll("div")
-              .data(ta_list)
+              .data(xScale)
               .enter()
               .append("div")
               .html(function(d) {return d.key });
