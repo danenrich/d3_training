@@ -95,7 +95,7 @@ d3.csv("bingo_data.csv", function(error, data) {
 	
 	var tree = d3.layout.tree()
 		.children(function(d) { return d.values; });
-	var nodes = tree.nodes(newData)	
+	var nodes = tree.nodes(newData);
 	var leaf = nodes.filter(function (d) {return (d.depth == 3 ? 1 : 0);});
 	console.log(leaf);
 	
@@ -175,7 +175,7 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("r", function(d) { return zScale(d.z); })//{if (d.values.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*max_size+min_size;}; }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
       .style("fill", function(d) { return color(d.sb); });//{ return color(d.sb); });
 
-  /*
+  
   var legend = svg.selectAll(".legend")
       .data(color.domain())
     .enter().append("g")
@@ -194,7 +194,7 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d; });
-*/
+      
 });
 
  
