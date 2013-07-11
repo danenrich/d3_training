@@ -138,28 +138,24 @@ d3.csv("bingo_data.csv", function(error, data) {
         .attr('x1', xScale.rangeExtent()[0])
         .attr('x2', xScale.rangeExtent()[1]);
 
-
-	//Position the bubbles
-	var taposition = svg.selectAll(".bubbly")
-		.data(data)
-		.attr("taPos",function(d) {return ta_list.indexOf(d.y);})
-		.enter().append("circle");
-
  	//variables for scaling the z-axis of the bubbles
   var max_size = 35;
 	var min_size = 3;
 	var max_z = d3.max(data, function(d) { return d.z; });
 	var min_z = d3.min(data, function(d) { return d.z; });
   
+  //console.log(d3.values(ta_list));
   svg.selectAll(".dot")
-      .data(data)
+      .data(ta_list)
     .enter().append("circle")
       .attr("class", "dot")
       .attr("cx", function(d) { return 10; }) //{ return x(d.x); })
-      .attr("cy", function(d) { return 0; }) //{ return y(d.y); })
-      .attr("r", function(d) {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*max_size+min_size;}; }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-      .style("fill", function(d) { return color(d.sb); });
+      .attr("cy", function(d) {console.log(d.values); return yScale(d.values.tas); })
+      .text(function(d) {return d.values.tas; })
+      .attr("r", function(d) { return 30; })//{if (d.values.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*max_size+min_size;}; }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
+      .style("fill", function(d) { return "red"; });//{ return color(d.sb); });
 
+  /*
   var legend = svg.selectAll(".legend")
       .data(color.domain())
     .enter().append("g")
@@ -178,7 +174,7 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d; });
-
+*/
 });
 
  
