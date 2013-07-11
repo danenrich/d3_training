@@ -78,11 +78,27 @@ d3.csv("bingo_data.csv", function(error, data) {
   var ta_list = d3.nest()
     .key(function(d) { return d.y; }).sortKeys(d3.ascending) 
     .entries(data);
-
+	
 	//Get list of Phases for the x-axis
   var phase_list = d3.nest()
     .key(function(d) { return d.x; }).sortKeys(d3.ascending) 
     .entries(data);
+    
+    
+ //Create tree data structure
+	var newData = { "key":"root", "values": 
+		d3.nest()
+			.key(function(d) { return d.y; }).sortKeys(d3.ascending)
+			.key(function(d) { return d.x; }).sortKeys(d3.ascending)
+			.entries(data)
+	}
+	
+	var tree = d3.layout.tree()
+		.children(function(d) { return d.values; });
+	var nodes = tree.nodes(newData)	
+	var leaf = nodes.filter(function (d) {return (d.depth == 3 ? 1 : 0);});
+	console.log(leaf);
+	
 
 	//Set the x- and y-axis domains
   xScale.domain(phase_list.map(function(d) { return d.key; }));
@@ -143,17 +159,21 @@ d3.csv("bingo_data.csv", function(error, data) {
 	var min_size = 3;
 	var max_z = d3.max(data, function(d) { return d.z; });
 	var min_z = d3.min(data, function(d) { return d.z; });
+	
+	var zScale = d3.scale.linear()
+		.domain([min_z, max_z])
+		.range([min_size, max_size]);
   
-  //console.log(d3.values(ta_list));
+  
   svg.selectAll(".dot")
-      .data(ta_list)
+      .data(leaf)
     .enter().append("circle")
       .attr("class", "dot")
-      .attr("cx", function(d) { return 10; }) //{ return x(d.x); })
-      .attr("cy", function(d) {console.log(d.values); return yScale(d.values.tas); })
-      .text(function(d) {return d.values.tas; })
-      .attr("r", function(d) { return 30; })//{if (d.values.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*max_size+min_size;}; }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-      .style("fill", function(d) { return "red"; });//{ return color(d.sb); });
+      .attr("cx", function(d) { return xScale(d.phases); }) //{ return x(d.x); })
+      .attr("cy", function(d) { return yScale(d.tas); })
+      .text(function(d) {return d.tas; })
+      .attr("r", function(d) { return zScale(d.z); })//{if (d.values.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*max_size+min_size;}; }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
+      .style("fill", function(d) { return color(d.sb); });//{ return color(d.sb); });
 
   /*
   var legend = svg.selectAll(".legend")
