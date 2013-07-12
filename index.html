@@ -166,7 +166,7 @@ d3.csv("bingo_data.csv", function(error, data) {
 				.data(function (d) { return d.values;})
 			.enter()
 				.append("g")
-				.attr("class","x_class")
+				.attr("class","x_class");
 		
 			//this is two levels down
 			  x_var.selectAll(".dot")
