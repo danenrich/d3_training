@@ -126,9 +126,9 @@ d3.csv("bingo_data.csv", function(error, data) {
 	//We're drawing straight vertical lines that span the height of the graph (yScale.rangeExtent) and hit the points between each bucket
   xgrid.attr('class','xgrid')
       .attr('x1', function(d){
-          return xScale(d) + xScale.rangeBand();}) 
+          return xScale(d) + xScale.rangeBand();})  //The "0" x-axis element is the y-axis, so we don't need a grid there. Thus, offset by 1 rangeBand.
       .attr('x2', function(d){
-          return xScale(d) + xScale.rangeBand();})
+          return xScale(d) + xScale.rangeBand();})  //The "0" x-axis element is the y-axis, so we don't need a grid there. Thus, offset by 1 rangeBand.
       .attr('y1', yScale.rangeExtent()[0])
       .attr('y2', yScale.rangeExtent()[1]);
 
@@ -141,9 +141,9 @@ d3.csv("bingo_data.csv", function(error, data) {
 	//We're drawing straight horizontal lines that span the height of the graph (xScale.rangeExtent) and hit the points between each bucket
   ygrid.attr('class','ygrid')
       .attr('y1', function(d){
-          return yScale(d) - yScale.rangeBand();})
+          return yScale(d);})   //The first y-grid should be the top of the graph, so no offset
       .attr('y2', function(d){
-          return yScale(d) - yScale.rangeBand();})
+          return yScale(d);})
       .attr('x1', xScale.rangeExtent()[0])
       .attr('x2', xScale.rangeExtent()[1]);
 
