@@ -45,6 +45,9 @@ var margin = {top: 50, right: 150, bottom: 80, left: 150},
 
 var color = d3.scale.category10();
 
+//var pulldownrow = d3.select("body").append("div")
+
+
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -67,17 +70,17 @@ var xAxis = d3.svg.axis()
 d3.csv("bingo_data.csv", function(error, data) {
   data.forEach(function(d) {
     d.names = d.names;
-    d.y = d.tas;
-    d.x = d.phases;
-    d.z = +d.npvs;
-    d.sb = d.strat_buckets; 
+    d.y = d.TA;
+    d.x = d.Phase;
+    d.z = +d.NPV;
+    d.sb = d.StrategicBucket; 
   });
 	
 	//Get list of elements (e.g. TAs) for the y-axis
   var y_list = d3.nest()
     .key(function(d) { return d.y; }).sortKeys(d3.ascending) 
     .entries(data);
-	
+
 	//Get list of elements (e.g. Phases) for the x-axis
   var x_list = d3.nest()
     .key(function(d) { return d.x; }).sortKeys(d3.ascending) 
@@ -225,7 +228,15 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d; });
-      
+  
+    /*
+  d3.select("#shru").append("select")
+    .on("change", change)
+.selectAll("option").data(dd).enter().append("option")
+    .attr("value", function(d){ return d.teamShotID; })
+    .text(function(d){ return d.teamShotID; })
+    */
+
 });
 
  
