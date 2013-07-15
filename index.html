@@ -88,8 +88,12 @@ d3.csv("bingo_data.csv", function(error, data) {
 		.key(function(d) { return d.y; }).sortKeys(d3.ascending)
 		.key(function(d) { return d.x; }).sortKeys(d3.ascending)
 		//***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
-		.sortValues(function(d) { return -d.z; }) //sorting from highest to lowest
+    .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
 		.entries(data);
+
+  var spam = d3.nest()
+    .key(function(d) { return parseFloat(-d.z); }).sortKeys(d3.ascending)
+    .entries(data);
 	    
 	//Set the x- and y-axis domains
   xScale.domain(x_list.map(function(d) { return d.key; }));
@@ -104,7 +108,7 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("transform", "rotate(-90)")
       .attr("y", "-135px")
       .attr("x", -height/2 + "px")
-      .text("TA")
+      .text("TA");
 
 	//Write the x-axis
   svg.append("g")
