@@ -118,34 +118,34 @@ d3.csv("bingo_data.csv", function(error, data) {
       .text("Phase");
       
  //Create the x-grid
-    var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d.key; })); 
+  var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d.key; })); 
 
-    xgrid.enter().append('line');
-    xgrid.exit().remove();
-		
-		//We're drawing straight vertical lines that span the height of the graph (yScale.rangeExtent) and hit the points between each bucket
-    xgrid.attr('class','xgrid')
-        .attr('x1', function(d){
-            return xScale(d) + xScale.rangeBand();}) 
-        .attr('x2', function(d){
-            return xScale(d) + xScale.rangeBand();})
-        .attr('y1', yScale.rangeExtent()[0])
-        .attr('y2', yScale.rangeExtent()[1]);
+  xgrid.enter().append('line');
+  xgrid.exit().remove();
+	
+	//We're drawing straight vertical lines that span the height of the graph (yScale.rangeExtent) and hit the points between each bucket
+  xgrid.attr('class','xgrid')
+      .attr('x1', function(d){
+          return xScale(d) + xScale.rangeBand();}) 
+      .attr('x2', function(d){
+          return xScale(d) + xScale.rangeBand();})
+      .attr('y1', yScale.rangeExtent()[0])
+      .attr('y2', yScale.rangeExtent()[1]);
 
  //Create the y-grid
-    var ygrid = svg.selectAll('.ygrid').data(y_list.map(function(d) { return d.key; })); 
+  var ygrid = svg.selectAll('.ygrid').data(y_list.map(function(d) { return d.key; })); 
 
-    ygrid.enter().append('line');
-    ygrid.exit().remove();
+  ygrid.enter().append('line');
+  ygrid.exit().remove();
 
-		//We're drawing straight horizontal lines that span the height of the graph (xScale.rangeExtent) and hit the points between each bucket
-    ygrid.attr('class','ygrid')
-        .attr('y1', function(d){
-            return yScale(d) - yScale.rangeBand();})
-        .attr('y2', function(d){
-            return yScale(d) - yScale.rangeBand();})
-        .attr('x1', xScale.rangeExtent()[0])
-        .attr('x2', xScale.rangeExtent()[1]);
+	//We're drawing straight horizontal lines that span the height of the graph (xScale.rangeExtent) and hit the points between each bucket
+  ygrid.attr('class','ygrid')
+      .attr('y1', function(d){
+          return yScale(d) - yScale.rangeBand();})
+      .attr('y2', function(d){
+          return yScale(d) - yScale.rangeBand();})
+      .attr('x1', xScale.rangeExtent()[0])
+      .attr('x2', xScale.rangeExtent()[1]);
 
 	//Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
 	//NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
