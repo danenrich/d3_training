@@ -75,13 +75,13 @@ d3.csv("bingo_data.csv", function(error, data) {
     d.sb = d.strat_buckets; 
   });
 	
-	//Get list of TAs for the y-axis
+	//Get list of elements (e.g. TAs) for the y-axis
   var ta_list = d3.nest()
     .key(function(d) { return d.y; }).sortKeys(d3.ascending) 
     .entries(data);
 	
-	//Get list of Phases for the x-axis
-  var phase_list = d3.nest()
+	//Get list of elements (e.g. Phases) for the x-axis
+  var x_list = d3.nest()
     .key(function(d) { return d.x; }).sortKeys(d3.ascending) 
     .entries(data);
     
@@ -94,7 +94,7 @@ d3.csv("bingo_data.csv", function(error, data) {
 		.entries(data);
 	    
 	//Set the x- and y-axis domains
-  xScale.domain(phase_list.map(function(d) { return d.key; }));
+  xScale.domain(x_list.map(function(d) { return d.key; }));
   yScale.domain(ta_list.map(function(d) { return d.key; }));
 
 	//Write the y-axis
@@ -120,16 +120,17 @@ d3.csv("bingo_data.csv", function(error, data) {
       .text("Phase");
       
  //Create the x-grid
-    var xgrid = svg.selectAll('.xgrid').data(phase_list.map(function(d) { return d.key; })); 
+    var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d.key; })); 
 
     xgrid.enter().append('line');
     xgrid.exit().remove();
-
+		
+		//We're drawing straight vertical lines that span the height of the graph (yScale.rangeExtent) and hit the points between each bucket
     xgrid.attr('class','xgrid')
         .attr('x1', function(d){
-            return xScale(d) + xScale.rangeBand() * (1 + padding / 2) ;})
+            return xScale(d) + xScale.rangeBand();}) 
         .attr('x2', function(d){
-            return xScale(d) + xScale.rangeBand() * (1 + padding / 2);})
+            return xScale(d) + xScale.rangeBand();})
         .attr('y1', yScale.rangeExtent()[0])
         .attr('y2', yScale.rangeExtent()[1]);
 
@@ -139,6 +140,7 @@ d3.csv("bingo_data.csv", function(error, data) {
     ygrid.enter().append('line');
     ygrid.exit().remove();
 
+		//We're drawing straight horizontal lines that span the height of the graph (xScale.rangeExtent) and hit the points between each bucket
     ygrid.attr('class','ygrid')
         .attr('y1', function(d){
             return yScale(d) - yScale.rangeBand() * ( padding / 2);})
@@ -191,14 +193,15 @@ d3.csv("bingo_data.csv", function(error, data) {
 			    .enter()
 			    	.append("circle")
 			      .attr("class", "dot")
-			      .attr("cx", function(d, i) { return xScale(d.x) - xSpace*(i - 0.5); })  //* (d.i * 2 + 1) ; }) 
-			      //.attr("cx", function(d) { return xScale(d.x) + xScale.rangeBand(); })  //* (d.i * 2 + 1) ; }) 
-			      .attr("cy", function(d) { return yScale(d.y); })
+			      .attr("cx", function(d, i) { return xScale(d.x) + xSpace*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+			      .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box
 			      .attr("r", function(d) {
 			      	if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
 			      		{if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;};} 
 			      	}) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-			      .style("fill", function(d) { return color(d.sb); });
+			      .style("fill", function(d) { return color(d.sb); })
+			      .append("svg:title")
+			      .text(function(d) { return d.names; });
 
 	//draw the legendy thing  
   var legend = svg.selectAll(".legend")
