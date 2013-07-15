@@ -89,6 +89,7 @@ d3.csv("bingo_data.csv", function(error, data) {
 	var dataNest = d3.nest()
 		.key(function(d) { return d.y; }).sortKeys(d3.ascending)
 		.key(function(d) { return d.x; }).sortKeys(d3.ascending)
+		//***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
 		.sortValues(function(d) { return -d.z; }) //sorting from highest to lowest
 		.entries(data);
 	    
@@ -159,11 +160,15 @@ d3.csv("bingo_data.csv", function(error, data) {
 	var numXs = xScale.domain().length; 
 	var numYs = yScale.domain().length; 
 	
+	//Determine sizing parameters for the bubbles
+	var xSpace = xScale.rangeBand() / maxProjs; //Determine how many pixels of "personal space" each bubble will get
+	var maxR = Math.min(xSpace,yScale.rangeBand())/2; //The maximum diameter of a bubble is the lesser of row height and horizontal space allocated to each bubble
+	
  	//variables for scaling the z-axis of the bubbles
-  var max_size = 35;
+  var max_size = maxR;
 	var min_size = 3;
 	var max_z = d3.max(data, function(d) { return d.z; });
-	var min_z = d3.min(data, function(d) { return d.z; });
+	var min_z = d3.min(data, function(d) { return d.z > 0 ? d.z : max_z; });
 	
 	// append the bubbles
 	//the top-level variables contains the y, then the x, then the projects
@@ -186,9 +191,13 @@ d3.csv("bingo_data.csv", function(error, data) {
 			    .enter()
 			    	.append("circle")
 			      .attr("class", "dot")
-			      .attr("cx", function(d) { return xScale(d.x) + xScale.rangeBand(); })  //* (d.i * 2 + 1) ; }) 
+			      .attr("cx", function(d, i) { return xScale(d.x) - xSpace*(i - 0.5); })  //* (d.i * 2 + 1) ; }) 
+			      //.attr("cx", function(d) { return xScale(d.x) + xScale.rangeBand(); })  //* (d.i * 2 + 1) ; }) 
 			      .attr("cy", function(d) { return yScale(d.y); })
-			      .attr("r", function(d) {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*max_size+min_size;}; }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
+			      .attr("r", function(d) {
+			      	if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
+			      		{if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;};} 
+			      	}) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
 			      .style("fill", function(d) { return color(d.sb); });
 
 	//draw the legendy thing  
