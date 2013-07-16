@@ -34,6 +34,10 @@ body {
 	  stroke-width:0.3;
 }
 
+.pulldownlabel {
+  margin-right: 5px;
+}
+
 </style>
 <body>
 <script type="text/javascript" src="d3/d3.v3.js"></script>
@@ -45,8 +49,9 @@ var margin = {top: 50, right: 150, bottom: 80, left: 150},
 
 var color = d3.scale.category10();
 
-//var pulldownrow = d3.select("body").append("div")
-
+//Create an object in the DOM before the svg object on which to latch on our pulldowns
+var pulldownrow = d3.select("body").append("div")
+  .attr("class", "pulldownrow");
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -70,12 +75,12 @@ var xAxis = d3.svg.axis()
 d3.csv("bingo_data.csv", function(error, data) {
   data.forEach(function(d) {
     d.names = d.names;
-    d.y = d.TA;
-    d.x = d.Phase;
-    d.z = +d.NPV;
-    d.sb = d.StrategicBucket; 
+    d.y = d.tas;
+    d.x = d.phases;
+    d.z = +d.npvs;
+    d.sb = d.buckets; 
   });
-	
+
 	//Get list of elements (e.g. TAs) for the y-axis
   var y_list = d3.nest()
     .key(function(d) { return d.y; }).sortKeys(d3.ascending) 
@@ -229,13 +234,29 @@ d3.csv("bingo_data.csv", function(error, data) {
       .style("text-anchor", "end")
       .text(function(d) { return d; });
   
-    /*
-  d3.select("#shru").append("select")
-    .on("change", change)
-.selectAll("option").data(dd).enter().append("option")
-    .attr("value", function(d){ return d.teamShotID; })
-    .text(function(d){ return d.teamShotID; })
-    */
+  //hard-coding axis options
+  var axis_choices = [{key:"tas",value:"TAs"},
+                        {key:"phases",value:"Phases"},
+                        {key:"buckets",value:"Strategic Buckets"}];
+
+  var z_choices = [{key:"npvs",value:"NPV"},
+                        {key:"unit",value:"None"}];
+
+  d3.select(".pulldownrow")
+    //add label
+    .append("div")
+      .attr("class", "pulldownlabel")
+      .text("X Axis: ")
+    //add drop-down
+    .append("select")
+    //.on("change", change)
+    //add options
+    .selectAll("option")
+      .data(axis_choices)
+      .enter()
+        .append("option")
+        .attr("class", "pulldownoption")
+        .text(function(d){ return d.value; });
 
 });
 
