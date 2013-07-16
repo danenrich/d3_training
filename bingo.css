@@ -1,0 +1,34 @@
+body {
+  font: 10pt sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+	font: 40px;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.xgrid, .ygrid {
+  opacity: 0.3;
+  stroke: #000;
+  stroke-width:2;
+}
+
+.label {
+	  stroke: blue;
+	  font-size:1.2em;
+	  stroke-width:0.3;
+}
+
+.pulldownlabel {
+  margin-right: 5px;
+}

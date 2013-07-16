@@ -1,202 +1,216 @@
-/*global portviz:false, d3:false, _:false */
-(function() {
-/*
- * a bingo chart plots category populations for
- * two categories.
- */
- this.bingo = function() {
-  var width = 720;
-  var height = 445;
-  var xlabel = '';
-  var ylabel = '';
-  var my = function(selection) {
-    var innerwidth = width - portviz.margins.left - portviz.margins.right;
-    var innerheight = height - portviz.margins.top - portviz.margins.bottom;
-    /*
-     * @param d 
-     *    [
-     *        {
-     *          portname: portfolio name,
-     *          portdata: {
-     *                  x: [x,x,x,...],   // (category)
-     *                  y: [y,y,y,...],   // (category)
-     *                  data: [{x:x, y:y, label: label (project name)}, ...]
-     *          }
-     *        }, ...
-     *    ]
-     */
-    selection.each(function(ppdata) {
-        var allx = [];
-        var ally = [];
+var margin = {top: 50, right: 150, bottom: 80, left: 150},
+    width = 1080 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
-        // group the data with common categories.
-        // TODO: better key generation
-        //{phase::ta, [{x,y,label,i},...], phase::ta, []}
-        var allpoints = [];
-        // max per group
-        var maxpop = 0;
-        _.each(ppdata, function(ppd, ppdindex) {
-            var grouped = {};
-            allx = _.union(allx, ppd.portdata.x);
-            ally = _.union(ally, ppd.portdata.y);
-            _.each(ppd.portdata.data, function(d) {
-                var key = d.x + '::' + d.y;
-                if (_.isUndefined(grouped[key])) grouped[key] = 0;
-                var i = grouped[key];
-                var exd = _.extend(d, {
-                    i:i,
-                    j:ppdindex,
-                    portname: ppd.portname,
-                    key: ppd.portname + '::' + d.label
-                    });
-                grouped[key] ++ ;
-                allpoints.push(exd);
-                maxpop = _.max([maxpop, grouped[key]]);
-            });
-        });
+var color = d3.scale.category10();
 
-        var padding = 0.1;
-        var xscale = d3.scale.ordinal()
-            .domain(allx)
-            .rangeRoundBands([0, innerwidth], padding);
-        var yscale = d3.scale.ordinal()
-            .domain(ally)
-            .rangeRoundBands([0, innerheight], padding);
+//Create an object in the DOM before the svg object on which to latch on our pulldowns
+var pulldownrow = d3.select("body").append("div")
+  .attr("class", "pulldownrow");
 
-        var colorScale = d3.scale.category10().domain(_.range(100));
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var xaxis = portviz.charts.xaxis()
-            .width(width).height(height)
-            .label(xlabel)
-            .scale(xscale);
+//Scale analytics. These live outside of the .forEach function.
+var yScale = d3.scale.ordinal().rangeRoundBands([0, height]);
 
-        var yaxis = portviz.charts.yaxis()
-            .width(width).height(height)
-            .label(ylabel)
-            .scale(yscale);
+var yAxis = d3.svg.axis()
+  .scale(yScale)
+  .orient("left");  
 
-        d3.select(this).selectAll('table').remove();
-        d3.select(this).selectAll('div.tab-content').remove();
-        d3.select(this).selectAll('svg.stacked-bar-line').remove();
-        d3.select(this).selectAll('svg.linechart').remove();
-        d3.select(this).selectAll('svg.scatter').remove();
-        d3.select(this).selectAll('svg.barchart').remove();
+var xScale = d3.scale.ordinal().rangeRoundBands([width, 0]);
 
-        var svg = d3.select(this).selectAll('svg').data(['hi']);
+var xAxis = d3.svg.axis()
+  .scale(xScale)
+  .orient("bottom");
 
-        svg.enter().append('svg');
-        svg.exit().remove();
+d3.csv("bingo_data.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.names = d.names;
+    d.y = d.tas;
+    d.x = d.phases;
+    d.z = +d.npvs;
+    d.sb = d.buckets; 
+  });
 
-        svg.attr('width', width)
-            .attr('height', height)
-            .attr('class', 'bingochart');
+	//Get list of elements (e.g. TAs) for the y-axis
+  var y_list = d3.nest()
+    .key(function(d) { return d.y; }).sortKeys(d3.ascending) 
+    .entries(data);
 
-        var gg = svg.selectAll('g.chartcontainer').data(['hi']);
+	//Get list of elements (e.g. Phases) for the x-axis
+  var x_list = d3.nest()
+    .key(function(d) { return d.x; }).sortKeys(d3.ascending) 
+    .entries(data);
+    
+	//Create tree data structure
+	var dataNest = d3.nest()
+		.key(function(d) { return d.y; }).sortKeys(d3.ascending)
+		.key(function(d) { return d.x; }).sortKeys(d3.ascending)
+		//***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
+    .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
+		.entries(data);
 
-        gg.enter().append('g');
-        gg.exit().remove();
+  var spam = d3.nest()
+    .key(function(d) { return parseFloat(-d.z); }).sortKeys(d3.ascending)
+    .entries(data);
+	    
+	//Set the x- and y-axis domains
+  xScale.domain(x_list.map(function(d) { return d.key; }));
+  yScale.domain(y_list.map(function(d) { return d.key; }));
 
-        gg.attr('class','chartcontainer')
-            .attr('transform', 'translate(' + portviz.margins.left + ',' + portviz.margins.top + ')');
+	//Write the y-axis
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", "-135px")
+      .attr("x", -height/2 + "px")
+      .text("TA");
 
-        gg.call(xaxis);
-        gg.call(yaxis);
+	//Write the x-axis
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("y", "45px")
+      .attr("x", width/2 + "px")
+      .text("Phase");
+      
+ //Create the x-grid
+  var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d.key; })); 
 
+  xgrid.enter().append('line');
+  xgrid.exit().remove();
+	
+	//We're drawing straight vertical lines that span the height of the graph (yScale.rangeExtent) and hit the points between each bucket
+  xgrid.attr('class','xgrid')
+      .attr('x1', function(d){
+          return xScale(d) + xScale.rangeBand();})  //The "0" x-axis element is the y-axis, so we don't need a grid there. Thus, offset by 1 rangeBand.
+      .attr('x2', function(d){
+          return xScale(d) + xScale.rangeBand();})  //The "0" x-axis element is the y-axis, so we don't need a grid there. Thus, offset by 1 rangeBand.
+      .attr('y1', yScale.rangeExtent()[0])
+      .attr('y2', yScale.rangeExtent()[1]);
 
-        // horizontal grid
-        var xgrid = gg.selectAll('.xgrid').data(allx);
+ //Create the y-grid
+  var ygrid = svg.selectAll('.ygrid').data(y_list.map(function(d) { return d.key; })); 
 
-        xgrid.enter().append('line');
-        xgrid.exit().remove();
+  ygrid.enter().append('line');
+  ygrid.exit().remove();
 
-        xgrid.attr('class','xgrid')
-            .attr('x1', function(d){
-                return xscale(d) + xscale.rangeBand() * (1 + padding / 2);})
-            .attr('x2', function(d){
-                return xscale(d) + xscale.rangeBand() * (1 + padding / 2);})
-            .attr('y1', yscale.rangeExtent()[0])
-            .attr('y2', yscale.rangeExtent()[1]);
+	//We're drawing straight horizontal lines that span the height of the graph (xScale.rangeExtent) and hit the points between each bucket
+  ygrid.attr('class','ygrid')
+      .attr('y1', function(d){
+          return yScale(d);})   //The first y-grid should be the top of the graph, so no offset
+      .attr('y2', function(d){
+          return yScale(d);})
+      .attr('x1', xScale.rangeExtent()[0])
+      .attr('x2', xScale.rangeExtent()[1]);
 
-        // vertical grid
-        var ygrid = gg.selectAll('.ygrid').data(ally);
+	//Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
+	//NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
+	var maxProjArray = d3.nest()
+		.key(function(d) { return d.y + '' + d.x; }).sortKeys(d3.ascending)
+		.rollup(function(leaves) { return leaves.length;})
+		.entries(data);
+		//This is the maximum number of projects in any x-y (e.g. TA-Phase) bucket
+		var maxProjs = d3.max(maxProjArray, function(d) { return d.values; });	
+		
+	//Get # of x and y elements (e.g. TAs and Phases)
+	var numXs = xScale.domain().length; 
+	var numYs = yScale.domain().length; 
+	
+	//Determine how many pixels of "personal space" each bubble will get
+	var bubble_padding = 5; //Amount of space between the bubbles and the axes.
+	var xSpace = (xScale.rangeBand() - bubble_padding*(maxProjs+1))/maxProjs; //bubble_padding is the space between bubbles and between the bubbles and the axes; more padding means smaller bubble size
+	var maxR = Math.min(xSpace,(yScale.rangeBand()-2*bubble_padding))/2; //The maximum diameter of a bubble is the lesser of row height and horizontal space allocated to each bubble
+	
+ 	//variables for scaling the z-axis of the bubbles
+  var max_size = maxR;
+	var min_size = 3;
+	var max_z = d3.max(data, function(d) { return d.z; });
+	var min_z = d3.min(data, function(d) { return d.z > 0 ? d.z : max_z; });
+	
+	// append the bubbles
+	//the top-level variables contains the y, then the x, then the projects
+	var y_var = svg.selectAll("g.y_class")
+			.data(dataNest)
+		.enter()
+			.append("g")
+			.attr("class","y_class");
 
-        ygrid.enter().append('line');
-        ygrid.exit().remove();
+		//this is one level down
+		var x_var = y_var.selectAll("g.x_class")
+				.data(function (d) { return d.values;})
+			.enter()
+				.append("g")
+				.attr("class","x_class");
+		
+			//this is two levels down
+			  x_var.selectAll(".dot")
+	  	  		.data(function (d) { return d.values;})
+			    .enter()
+			    	.append("circle")
+			      .attr("class", "dot")
+			      .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+			      .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box	
+			      .attr("r", function(d) {
+			      	if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
+			      		{if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;};} 
+			      	}) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
+			      .style("fill", function(d) { return color(d.sb); })
+			      .append("svg:title")
+			      .text(function(d) { return d.names; });
 
-        ygrid.attr('class','ygrid')
-            .attr('y1', function(d){
-                return yscale(d) - yscale.rangeBand() * ( padding / 2);})
-            .attr('y2', function(d){
-                return yscale(d) - yscale.rangeBand() * ( padding / 2);})
-            .attr('x1', xscale.rangeExtent()[0])
-            .attr('x2', xscale.rangeExtent()[1]);
+	//draw the legendy thing  
+  var legend = svg.selectAll(".legend")
+      .data(color.domain())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
 
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
 
-        // points
-        var sss = gg.selectAll('a.dot')
-            .data(allpoints, function(d){ return d.key; });
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
 
-        sss.enter().append('a');
-        sss.exit().remove();
+  //hard-coding axis options
+  var axis_choices = [{key:"tas",value:"TAs"},
+                        {key:"phases",value:"Phases"},
+                        {key:"buckets",value:"Strategic Buckets"}];
 
-        sss.attr('class','dot bingo');
+  var z_choices = [{key:"npvs",value:"NPV"},
+                        {key:"unit",value:"None"}];
 
-        var ssc = sss.selectAll('circle').data(function(d){return [d];});
-        ssc.enter().append('circle')
-            .attr('cx', function(d) {
-                return xscale(d.x) + xscale.rangeBand() * (d.i * 2 + 1) / (maxpop * 2);
-            })
-            .attr('cy', function(d) {
-                return yscale(d.y) + yscale.rangeBand() * (d.j * 2 + 1) / (ppdata.length * 2);
-            });
+  d3.select(".pulldownrow")
+    //add label
+    .append("div")
+      .attr("class", "pulldownlabel")
+      .text("X Axis: ")
+    //add drop-down
+    .append("select")
+    //.on("change", change)
+    //add options
+    .selectAll("option")
+      .data(axis_choices)
+      .enter()
+        .append("option")
+        .attr("class", "pulldownoption")
+        .text(function(d){ return d.value; });
 
-        ssc.exit().remove();
-
-        var xspacing = innerwidth / (maxpop * allx.length);
-        var yspacing = innerheight / (ppdata.length * ally.length);
-        var radius = 0.8 * _.min([xspacing,yspacing]) / 2;
-
-        ssc.transition()
-            .attr('cx', function(d) {
-                return xscale(d.x) + xscale.rangeBand() * (d.i * 2 + 1) / (maxpop * 2);
-            })
-            .attr('cy', function(d) {
-                return yscale(d.y) + yscale.rangeBand() * (d.j * 2 + 1) / (ppdata.length * 2);
-            })
-            .attr('r', radius)
-            .attr('fill', function(d) {
-                return colorScale(d.j);
-            })
-            .attr('name', function(d) {return d.label;})
-            .attr('opacity', 1);
-
-        sss.call(portviz.charts.tooltip(gg, function(dl){return dl.label + '(' + dl.portname + ')';})
-          .width(innerwidth)
-          .height(innerheight));
-
-    });
-  };
-  my.width = function(v) {
-      if (!arguments.length) return width;
-      width = v;
-      return my;
-  };
-  my.height = function(v) {
-      if (!arguments.length) return height;
-      height = v;
-      return my;
-  };
-  my.xlabel = function(v) {
-      if (!arguments.length) return xlabel;
-      xlabel = v;
-      return my;
-  };
-  my.ylabel = function(v) {
-      if (!arguments.length) return ylabel;
-      ylabel = v;
-      return my;
-  };
-  return my;
- };
-
-}).apply(portviz.charts);
+});
