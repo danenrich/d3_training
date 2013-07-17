@@ -1,13 +1,16 @@
+//Set the margins for the chart
 var margin = {top: 50, right: 150, bottom: 80, left: 150},
     width = 1080 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
+//Using the basic d3 colors
 var color = d3.scale.category10();
 
 //Create an object in the DOM before the svg object on which to latch on our pulldowns
 var pulldownrow = d3.select("body").append("div")
   .attr("class", "pulldownrow");
 
+//Drop the SVG object after the pulldowns
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -27,14 +30,60 @@ var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom");
 
+//Set a_axis_choice to tas by default
+var x_axis_choice = "tas";
+
+//Get the data and start drawing
 d3.csv("bingo_data.csv", function(error, data) {
   data.forEach(function(d) {
     d.names = d.names;
-    d.y = d.tas;
+    d.y = d[x_axis_choice];
     d.x = d.phases;
     d.z = +d.npvs;
     d.sb = d.buckets; 
   });
+
+  //hard-coding axis options
+  var axis_choices = [{key:"tas",value:"TAs"},
+                        {key:"phases",value:"Phases"},
+                        {key:"buckets",value:"Strategic Buckets"}];
+
+  var z_choices = [{key:"npvs",value:"NPV"},
+                        {key:"unit",value:"None"}];
+
+  //build the drop-down for choosing the x-axis
+  d3.select(".pulldownrow")
+    //add label
+    .append("div")
+      .attr("class", "pulldownlabel")
+      .text("X Axis: ")
+    //add drop-down
+    .append("select")
+      .attr("id", "pulldown_x_axis")
+    //.on("change", change)
+    //add options
+    .selectAll("option")
+      .data(axis_choices)
+      .enter()
+        .append("option")
+        .attr("class", "pulldownoption")
+        .text(function(d){ return d.value; });
+
+  //Get the pulldown variable
+
+  //var spam = axis_choices[x_axis_choice];
+  //console.log(spam);
+
+var e = document.getElementById("pulldown_x_axis");
+var strUser = e.options[e.selectedIndex].text;
+console.log(strUser);
+/*
+$(document).ready(function() {
+  $(".pulldown_x_axis").change(function(){
+    x_axis_choice = axis_choices
+  });
+*/
+
 
 	//Get list of elements (e.g. TAs) for the y-axis
   var y_list = d3.nest()
@@ -188,29 +237,5 @@ d3.csv("bingo_data.csv", function(error, data) {
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d; });
-
-  //hard-coding axis options
-  var axis_choices = [{key:"tas",value:"TAs"},
-                        {key:"phases",value:"Phases"},
-                        {key:"buckets",value:"Strategic Buckets"}];
-
-  var z_choices = [{key:"npvs",value:"NPV"},
-                        {key:"unit",value:"None"}];
-
-  d3.select(".pulldownrow")
-    //add label
-    .append("div")
-      .attr("class", "pulldownlabel")
-      .text("X Axis: ")
-    //add drop-down
-    .append("select")
-    //.on("change", change)
-    //add options
-    .selectAll("option")
-      .data(axis_choices)
-      .enter()
-        .append("option")
-        .attr("class", "pulldownoption")
-        .text(function(d){ return d.value; });
 
 });
