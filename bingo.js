@@ -30,8 +30,15 @@ var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom");
 
+//hard-coding axis options
+var axis_choices = [{key:"Pipeline Balance",value:{x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
+                    {key:"Compound-Indications",value:{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
+                    {key:"Alignment",value:{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
+
 //Set a_axis_choice to tas by default
-var x_axis_choice = "tas";
+//http://stackoverflow.com/questions/8088115/json-get-items-by-value
+var axis_choice = "Pipeline Balance";
+var x_axis_choice = axis_choices[axis_choice].x;
 
 //Get the data and start drawing
 d3.csv("bingo_data.csv", function(error, data) {
@@ -43,13 +50,6 @@ d3.csv("bingo_data.csv", function(error, data) {
     d.sb = d.buckets; 
   });
 
-  //hard-coding axis options
-  var axis_choices = [{key:"tas",value:"TAs"},
-                        {key:"phases",value:"Phases"},
-                        {key:"buckets",value:"Strategic Buckets"}];
-
-  var z_choices = [{key:"npvs",value:"NPV"},
-                        {key:"unit",value:"None"}];
 
   //build the drop-down for choosing the x-axis
   d3.select(".pulldownrow")

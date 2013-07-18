@@ -1,33 +1,33 @@
-names,tas,phases,buckets,npvs
-Avniman,CNS,Phase 2,Considered,521.3846001
-Creficil,Endocrine Disorder,NDA,Committed,339.8000853
-Eaglogen,Endocrine Disorder,Phase 3,Considered,4736.336609
-Estger,Immunology,Phase 1,Considered,902.4070627
-Holitorcitus,Immunology,Phase 2,Considered,2066.58106
-Masogen,Immunology,Phase 1,Potential,376.3365076
-Matisem,Endocrine Disorder,Phase 1,Considered,1080.133034
-Meprylol,Dermatology,Phase 1,Considered,268.8117911
-Mervisil,Immunology,NDA,Committed,358.4157215
-Metaphysis,Immunology,Phase 2,Considered,722.2732004
-Mrilipzor,CNS,Phase 3,Considered,1009.081649
-Mritigen,CNS,Phase 1,Considered,688.8603532
-Nifilmox,Ophthalmology,Phase 2,Considered,1033.29053
-OpthTank,Ophthalmology,Phase 1,Potential,268.8117911
-Polgen,Immunology,Phase 3,Committed,632.3738042
-Prototase,Endocrine Disorder,Phase 2,Considered,910.0359748
-Refevel,CNS,Phase 2,Considered,267.6945869
-Reflitol,CNS,NDA,Committed,1047.067737
-Resdexel,Endocrine Disorder,Preclinical,Potential,528.2713314
-Rilopof,CNS,Phase 1,Considered,868.8352785
-Rydovanil,CNS,Phase 1,Considered,310.4471038
-Rytifil,Ophthalmology,NDA,Committed,361.3987914
-Tikofermin,Dermatology,Phase 3,Committed,1262.576658
-Trivlexin,Endocrine Disorder,Phase 3,Considered,1024.497045
-Varmenase,Endocrine Disorder,Phase 2,Considered,1694.596469
-Virtiman,Immunology,Preclinical,Considered,350.4794818
-Vrexigen,CNS,Phase 1,Potential,-8.810054253
-Vrilimen,Ophthalmology,Phase 1,Considered,353.1369331
-Weglifil,Immunology,Phase 1,Considered,593.1908287
-Xumanase,CNS,Preclinical,Considered,1239.948636
-Xyfigil,Endocrine Disorder,Phase 1,Potential,3.365848502
-Zerxil,Endocrine Disorder,Phase 3,Considered,172.2133302
+names,tas,phases,buckets,compounds,statuses,indications,npvs,enpvs
+Avniman,CNS,Phase 2,Considered,CNS-785,AUTHORIZED,Alzheimer's disease,521.3846001,228.577209
+Creficil,Endocrine Disorder,NDA,Committed,ENDC-867,ACTIVE,Thyroid nodules,339.8000853,76.7779652
+Eaglogen,Endocrine Disorder,Phase 3,Considered,ENDC-522,ACTIVE,Alopecia,4736.336609,1602.176186
+Estger,Immunology,Phase 1,Considered,IMM-211,ACTIVE,Ankylosing Spondylitis,902.4070627,226.2876853
+Holitorcitus,Immunology,Phase 2,Considered,IMM-060,ACTIVE,Rheumatoid Arthritis,2066.58106,740.9256862
+Masogen,Immunology,Phase 1,Potential,IMM-455,ACTIVE,Acute Pain,376.3365076,64.51070092
+Matisem,Endocrine Disorder,Phase 1,Considered,ENDC-560,ACTIVE,Goiter,1080.133034,283.7239447
+Meprylol,Dermatology,Phase 1,Considered,OPTH-001,ACTIVE,Diabetic Nephropathy,268.8117911,89.48206903
+Mervisil,Immunology,NDA,Committed,IMM-211,ACTIVE,Muscular Disorder,358.4157215,347.6632499
+Metaphysis,Immunology,Phase 2,Considered,IMM-165,ACTIVE,Rheumatoid Arthritis,722.2732004,504.4356032
+Mrilipzor,CNS,Phase 3,Considered,CNS-612,ACTIVE,Smoking Cessation,1009.081649,218.502302
+Mritigen,CNS,Phase 1,Considered,CNS-025,ACTIVE,Cognitive Impairment,688.8603532,207.9354597
+Nifilmox,Ophthalmology,Phase 2,Considered,OPTH-244,ACTIVE,Glaucoma,1033.29053,257.1761966
+OpthTank,Ophthalmology,Phase 1,Potential,OPTH-001,Unknown,Diabetic Nephropathy,268.8117911,52.28725352
+Polgen,Immunology,Phase 3,Committed,IMM-211,ACTIVE,Sjogren's Sydrome,632.3738042,158.3643347
+Prototase,Endocrine Disorder,Phase 2,Considered,ENDC-522,ACTIVE,Diabetes Mellitus,910.0359748,196.1152552
+Refevel,CNS,Phase 2,Considered,CNS-534,ACTIVE,Anxiety Disorder,267.6945869,65.00998532
+Reflitol,CNS,NDA,Committed,CNS-025,ACTIVE,Acute Migraine,1047.067737,212.9268366
+Resdexel,Endocrine Disorder,Preclinical,Potential,ENDC-920,ACTIVE,Alopecia,528.2713314,97.74333451
+Rilopof,CNS,Phase 1,Considered,CNS-956,ACTIVE,Alzheimer's disease,868.8352785,191.6531355
+Rydovanil,CNS,Phase 1,Considered,CNS-989,ACTIVE,Alzheimer's disease,310.4471038,66.28094569
+Rytifil,Ophthalmology,NDA,Committed,ATH-235,ACTIVE,Acute Pain,361.3987914,339.6758639
+Tikofermin,Dermatology,Phase 3,Committed,IMM-165,ACTIVE,Psoriasis,1262.576658,794.0582948
+Trivlexin,Endocrine Disorder,Phase 3,Considered,ENDC-867,ACTIVE,Alopecia,1024.497045,581.2727082
+Varmenase,Endocrine Disorder,Phase 2,Considered,ENDC-867,ACTIVE,Alopecia,1694.596469,544.0705315
+Virtiman,Immunology,Preclinical,Considered,IMM-455,ACTIVE,Rheumatoid Arthritis,350.4794818,76.4147829
+Vrexigen,CNS,Phase 1,Potential,CNS-072,ACTIVE,Acute Migraine,-8.810054253,-46.25787914
+Vrilimen,Ophthalmology,Phase 1,Considered,OPTH-244,ACTIVE,Diabetic Nephropathy,353.1369331,93.56481308
+Weglifil,Immunology,Phase 1,Considered,IMM-455,ACTIVE,Lambert-Eaton Syndrome,593.1908287,97.41436186
+Xumanase,CNS,Preclinical,Considered,CNS-612,PLANNED,Anxiety Disorder,1239.948636,112.9903194
+Xyfigil,Endocrine Disorder,Phase 1,Potential,ENDC-560,PLANNED,Myxedema,3.365848502,-35.17625802
+Zerxil,Endocrine Disorder,Phase 3,Considered,ENDC-522,PLANNED,Goiter,172.2133302,158.5042097

@@ -1,4 +1,4 @@
-{ From user Dan, Model Demo_portfolio_model at 3-Jul-2013 2:56:27 PM }
+{ From user Dan, Model Demo_portfolio_model at 17-Jul-2013 5:49:47 PM }
 SoftwareVersion 4.4.4
 
 
@@ -51,7 +51,7 @@ Title: Demo Portfolio Model
 Author: Enrich
 Date: Wed, Nov 15, 2000 10:27 AM
 SaveAuthor: Dan
-SaveDate: Wed, Jul 3, 2013 2:56 PM
+SaveDate: Wed, Jul 17, 2013 5:49 PM
 DefaultSize: 48,24
 DiagState: 2,12,-7,947,668,17
 WindState: 1,102,90
@@ -3859,7 +3859,7 @@ DefaultSize: 48,24
 NodeLocation: 168,64,1
 NodeSize: 48,24
 NodeInfo: 1,0,0,1,1,1,0,0,0,0
-DiagState: 2,111,53,1164,405,17
+DiagState: 2,111,53,1164,775,17
 Flags: <flag attr="proj_map_node"/>
 
 Variable Phase
@@ -27236,13 +27236,13 @@ Objective d3_Portfolio_Landsca
 Title: d3 Portfolio Landscape
 Units: $M
 Description: The x-axis and y-axis represent categories by which projects can be viewed. The bubble size can be chosen to represent eNPV, NPV, Cost to Launch or Peak Revenue. The color scheme can be chosen to represent project phase, project therapeutic area, key/non-key projects or priority/non-priority projects.  If the project bubble is too small to be displayed, it will be colored black.
-Definition: mp_to_sp_(Table(d3_Bingo_Index)(all_projects ,Therapeutic_a ,phase_cleaned ,strat_bucket_clean ,Npv_mp ))
+Definition: mp_to_sp_(Table(d3_Bingo_Index)(all_projects ,Therapeutic_a ,phase_cleaned ,strat_bucket_clean ,Compound,Stat,Indication,Npv_mp,Enpv_mp ))
 NodeLocation: 696,152,1
 NodeSize: 48,24
 NodeInfo: 1,1,1,1,1,1,0,,0,
 WindState: 2,809,58,476,666
 DefnState: 2,688,610,608,303,0,MIDM
-ValueState: 2,338,258,788,646,0,MIDM
+ValueState: 2,338,258,1072,651,0,MIDM
 ReformVal: [d3_Bingo_Index,Projects]
 I_o__type: output
 Flags: <flag attr="default_view" value="bubble"/>~
@@ -27265,7 +27265,7 @@ Display_order: 21
 
 Index d3_Bingo_Index
 Title: d3 Bingo Index
-Definition: ['names','tas','phases','strat_buckets','npvs']
+Definition: ['names','tas','phases','buckets','compounds','statuses','indications','npvs','enpvs']
 NodeLocation: 696,224,1
 NodeSize: 48,24
 
