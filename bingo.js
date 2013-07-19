@@ -31,8 +31,6 @@ var xAxis = d3.svg.axis()
   .orient("bottom");
 
 //Build the layout selector
-
-//Hard-coding axis options
 var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
                     {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
@@ -50,16 +48,19 @@ var layout_dropdown = d3.select(".pulldownrow")
     .attr("id", "pulldown_layout")
   .on("change", change_layout);
 
-//var layout_data = redo_layout(layout_choice);
-var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
-var layout_strings = []; //layout_strings is an array of the layout options as text strings
-for(i=0;i<layout_choices.length;i++) {
-  layout_strings[i] = d3.keys(layout_choices[i]);
+//pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
+function doTheLayout(returnMe) {
+  var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
+  var layout_strings = []; //layout_strings is an array of the layout options as text strings
+  for(i=0;i<layout_choices.length;i++) {
+    layout_strings[i] = d3.keys(layout_choices[i]);
+  };
+  if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}};
 };
 
       //add options
       var layout_options =  layout_dropdown.selectAll("option")
-        .data(layout_strings);
+        .data(doTheLayout("strings"));
 
       layout_options.enter()
           .append("option")
@@ -69,30 +70,28 @@ for(i=0;i<layout_choices.length;i++) {
       layout_options.exit()
         .remove();
 
+//Function called 
 var change_layout = function() {
   alert("Your mom");
-  doTheD3();
   layout_choice = "Alignment";
+  doTheD3();
 };
-
-/*  var change_layout = $("#pulldown_layout").change(function() {
-    layout_choice = $(this).val();
-  }).change();
-*/
 
 doTheD3();
 
 //This is what you call when you want to re-draw the graph
 function doTheD3() {
 
+  var mylayout = doTheLayout("data");
+
   //Get the data and start drawing
   d3.csv("bingo_data.csv", function(error, data) {
     data.forEach(function(d) {
       d.names = d.names;
-      d.y = d[layout_data.y];
-      d.x = d[layout_data.x];
-      d.z = +d[layout_data.z];
-      d.sb = d[layout_data.cfill];
+      d.y = d[mylayout.y];
+      d.x = d[mylayout.x];
+      d.z = +d[mylayout.z];
+      d.cfill = d[mylayout.cfill];
     });
 
     //Get list of elements (e.g. TAs) for the y-axis
@@ -224,7 +223,7 @@ function doTheD3() {
                 if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
                   {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;};}
                 }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-              .style("fill", function(d) { return color(d.sb); })
+              .style("fill", function(d) { return color(d.cfill); })
               .append("svg:title")
               .text(function(d) { return d.names; });
 
