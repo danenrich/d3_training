@@ -1,3 +1,11 @@
+$(document).ready(function() {
+  //doing this because the .on("change", change_layout) doesn't seem to be working
+  $("#pulldown_layout").change(function() {
+    alert("Your mom");
+    layout_choice = "Alignment";
+    doTheD3();
+  });
+});
 //Set the margins for the chart
 var margin = {top: 50, right: 150, bottom: 80, left: 150},
     width = 1080 - margin.left - margin.right,
@@ -46,76 +54,10 @@ var layout_dropdown = d3.select(".pulldownrow")
   //add drop-down
   .append("select")
     .attr("id", "pulldown_layout")
-  .on("change", change_layout);
+    //.on("change", change_layout) doesn't seem to be applying, so doing in jquery
+    .attr("class","myclass");
 
-//pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
-function doTheLayout(returnMe) {
-  var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
-  var layout_strings = []; //layout_strings is an array of the layout options as text strings
-  for(i=0;i<layout_choices.length;i++) {
-    layout_strings[i] = d3.keys(layout_choices[i]);
-  };
-  if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}};
-};
-
-      //add options
-      var layout_options =  layout_dropdown.selectAll("option")
-        .data(doTheLayout("strings"));
-
-      layout_options.enter()
-          .append("option")
-          .attr("class", "pulldownoption")
-          .text(function(d){ return d; });
-
-      layout_options.exit()
-        .remove();
-
-//Function called 
-var change_layout = function() {
-  alert("Your mom");
-  layout_choice = "Alignment";
-  doTheD3();
-};
-
-doTheD3();
-
-//This is what you call when you want to re-draw the graph
-function doTheD3() {
-
-  var mylayout = doTheLayout("data");
-
-  //Get the data and start drawing
-  d3.csv("bingo_data.csv", function(error, data) {
-    data.forEach(function(d) {
-      d.names = d.names;
-      d.y = d[mylayout.y];
-      d.x = d[mylayout.x];
-      d.z = +d[mylayout.z];
-      d.cfill = d[mylayout.cfill];
-    });
-
-    //Get list of elements (e.g. TAs) for the y-axis
-    var y_list = d3.nest()
-      .key(function(d) { return d.y; }).sortKeys(d3.ascending)
-      .entries(data);
-
-    //Get list of elements (e.g. Phases) for the x-axis
-    var x_list = d3.nest()
-      .key(function(d) { return d.x; }).sortKeys(d3.ascending)
-      .entries(data);
-
-    //Create tree data structure
-    var dataNest = d3.nest()
-      .key(function(d) { return d.y; }).sortKeys(d3.ascending)
-      .key(function(d) { return d.x; }).sortKeys(d3.ascending)
-      //***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
-      .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
-      .entries(data);
-
-    var spam = d3.nest()
-      .key(function(d) { return parseFloat(-d.z); }).sortKeys(d3.ascending)
-      .entries(data);
-
+function doTheAxes(x_list,y_list) {
     //Set the x- and y-axis domains
     xScale.domain(x_list.map(function(d) { return d.key; }));
     yScale.domain(y_list.map(function(d) { return d.key; }));
@@ -171,6 +113,70 @@ function doTheD3() {
             return yScale(d);})
         .attr('x1', xScale.rangeExtent()[0])
         .attr('x2', xScale.rangeExtent()[1]);
+};
+
+//pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
+function doTheLayout(returnMe) {
+  var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
+  var layout_strings = []; //layout_strings is an array of the layout options as text strings
+  for(i=0;i<layout_choices.length;i++) {
+    layout_strings[i] = d3.keys(layout_choices[i]);
+  }
+  if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}}
+}
+
+      //add options
+      var layout_options =  layout_dropdown.selectAll("option")
+        .data(doTheLayout("strings"));
+
+      layout_options.enter()
+          .append("option")
+          .attr("class", "pulldownoption")
+          .text(function(d){ return d; });
+
+      layout_options.exit()
+        .remove();
+
+doTheD3();
+
+//This is what you call when you want to re-draw the graph
+function doTheD3() {
+
+  var myLayout = doTheLayout("data");
+
+  //Get the data and start drawing
+  d3.csv("bingo_data.csv", function(error, data) {
+    data.forEach(function(d) {
+      d.names = d.names;
+      d.y = d[myLayout.y];
+      d.x = d[myLayout.x];
+      d.z = +d[myLayout.z];
+      d.cfill = d[myLayout.cfill];
+    });
+
+    //Get list of elements (e.g. TAs) for the y-axis
+    var y_list = d3.nest()
+      .key(function(d) { return d.y; }).sortKeys(d3.ascending)
+      .entries(data);
+
+    //Get list of elements (e.g. Phases) for the x-axis
+    var x_list = d3.nest()
+      .key(function(d) { return d.x; }).sortKeys(d3.ascending)
+      .entries(data);
+
+    //Create tree data structure
+    var dataNest = d3.nest()
+      .key(function(d) { return d.y; }).sortKeys(d3.ascending)
+      .key(function(d) { return d.x; }).sortKeys(d3.ascending)
+      //***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
+      .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
+      .entries(data);
+
+    var spam = d3.nest()
+      .key(function(d) { return parseFloat(-d.z); }).sortKeys(d3.ascending)
+      .entries(data);
+
+    doTheAxes(x_list,y_list);
 
     //Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
     //NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
@@ -225,7 +231,9 @@ function doTheD3() {
                 }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
               .style("fill", function(d) { return color(d.cfill); })
               .append("svg:title")
-              .text(function(d) { return d.names; });
+              .text(function(d) { return d.names; })
+            .exit()
+              .remove();         
 
     //draw the legendy thing  
     var legend = svg.selectAll(".legend")
@@ -249,3 +257,9 @@ function doTheD3() {
 
   });
 };
+/*
+function reDraw() {
+  transition.select(.x_axis)
+    .call(xAxis)
+};
+*/
