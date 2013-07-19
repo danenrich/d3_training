@@ -30,35 +30,49 @@ var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom");
 
+//Build the layout selector
+
 //Hard-coding axis options
 var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
                     {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
 
 var layout_choice = "Pipeline Balance"; //Text string of selected option
-/*
-function redo_layout(x) {
-  layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];
+
+//build the drop-down for choosing the layout
+var layout_dropdown = d3.select(".pulldownrow")
+  //add label
+  .append("div")
+    .attr("class", "pulldownlabel")
+    .text("Choose Layout: ")
+  //add drop-down
+  .append("select")
+    .attr("id", "pulldown_layout")
+  .on("change", change_layout);
+
+//var layout_data = redo_layout(layout_choice);
+var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
+var layout_strings = []; //layout_strings is an array of the layout options as text strings
+for(i=0;i<layout_choices.length;i++) {
+  layout_strings[i] = d3.keys(layout_choices[i]);
 };
-*/
 
-    //build the drop-down for choosing the layout
-    var layout_dropdown = d3.select(".pulldownrow")
-      //add label
-      .append("div")
-        .attr("class", "pulldownlabel")
-        .text("Choose Layout: ")
-      //add drop-down
-      .append("select")
-        .attr("id", "pulldown_layout")
-      .on("change", change_layout);
+      //add options
+      var layout_options =  layout_dropdown.selectAll("option")
+        .data(layout_strings);
 
+      layout_options.enter()
+          .append("option")
+          .attr("class", "pulldownoption")
+          .text(function(d){ return d; });
+
+      layout_options.exit()
+        .remove();
 
 var change_layout = function() {
   alert("Your mom");
   doTheD3();
   layout_choice = "Alignment";
-  layout_data;
 };
 
 /*  var change_layout = $("#pulldown_layout").change(function() {
@@ -158,25 +172,6 @@ function doTheD3() {
             return yScale(d);})
         .attr('x1', xScale.rangeExtent()[0])
         .attr('x2', xScale.rangeExtent()[1]);
-
-//var layout_data = redo_layout(layout_choice);
-var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
-var layout_strings = []; //layout_strings is an array of the layout options as text strings
-for(i=0;i<layout_choices.length;i++) {
-  layout_strings[i] = d3.keys(layout_choices[i]);
-  };
-
-      //add options
-      var layout_options =  layout_dropdown.selectAll("option")
-        .data(layout_strings);
-
-      layout_options.enter()
-          .append("option")
-          .attr("class", "pulldownoption")
-          .text(function(d){ return d; });
-
-      layout_options.exit()
-        .remove();
 
     //Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
     //NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
