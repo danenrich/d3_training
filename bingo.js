@@ -68,7 +68,7 @@ d3.csv("bingo_data.csv", function(error, data) {
     //.on("change", change)
     //add options
     .selectAll("option")
-      .data(layout_choices, function(d,i) {return d[0];})
+      .data(layout_choices, function(d,i) {return d[0].key;})
       .enter()
         .append("option")
         .attr("class", "pulldownoption")
