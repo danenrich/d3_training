@@ -31,23 +31,28 @@ var xAxis = d3.svg.axis()
   .orient("bottom");
 
 //hard-coding axis options
-var axis_choices = [{key:"Pipeline Balance",value:{x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
-                    {key:"Compound-Indications",value:{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
-                    {key:"Alignment",value:{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
+var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
+                    {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
+                    {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
 
 //Set a_axis_choice to tas by default
-//http://stackoverflow.com/questions/8088115/json-get-items-by-value
-var axis_choice = "Pipeline Balance";
-var x_axis_choice = axis_choices[axis_choice].x;
+var layout_choice = "Pipeline Balance";
+var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice]; 
+
+/*
+var x_axis_choice = axis_choices.filter(function(d,i) {
+  if (axis_choices[i][axis_choice] !== undefined) {return i;} //axis_choices[i].value;
+    });
+*/
 
 //Get the data and start drawing
 d3.csv("bingo_data.csv", function(error, data) {
   data.forEach(function(d) {
     d.names = d.names;
-    d.y = d[x_axis_choice];
-    d.x = d.phases;
-    d.z = +d.npvs;
-    d.sb = d.buckets; 
+    d.y = d[layout_data.y];
+    d.x = d[layout_data.x];
+    d.z = +d[layout_data.z];
+    d.sb = d[layout_data.cfill]; 
   });
 
 
@@ -63,16 +68,13 @@ d3.csv("bingo_data.csv", function(error, data) {
     //.on("change", change)
     //add options
     .selectAll("option")
-      .data(axis_choices)
+      .data(layout_choices, function(d,i) {return d[0];})
       .enter()
         .append("option")
         .attr("class", "pulldownoption")
         .text(function(d){ return d.value; });
 
   //Get the pulldown variable
-
-  //var spam = axis_choices[x_axis_choice];
-  //console.log(spam);
 
 var e = document.getElementById("pulldown_x_axis");
 var strUser = e.options[e.selectedIndex].text;
