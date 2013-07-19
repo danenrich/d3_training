@@ -36,11 +36,28 @@ var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
 
 var layout_choice = "Pipeline Balance"; //Text string of selected option
+/*
+function redo_layout(x) {
+  layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];
+};
+*/
+//var layout_data = redo_layout(layout_choice);
 var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
 var layout_strings = []; //layout_strings is an array of the layout options as text strings
 for(i=0;i<layout_choices.length;i++) {
   layout_strings[i] = d3.keys(layout_choices[i]);
   };
+
+var change_layout = function() {
+  alert("Your mom");
+  layout_choice = "Alignment";
+  layout_data;
+};
+
+/*  var change_layout = $("#pulldown_layout").change(function() {
+    layout_choice = $(this).val();
+  }).change();
+*/
 
 //Get the data and start drawing
 d3.csv("bingo_data.csv", function(error, data) {
@@ -60,8 +77,8 @@ d3.csv("bingo_data.csv", function(error, data) {
       .text("Choose Layout: ")
     //add drop-down
     .append("select")
-      .attr("id", "pulldown_x_axis")
-    //.on("change", change)
+      .attr("id", "pulldown_layout")
+    .on("change", change_layout)
     //add options
     .selectAll("option")
       .data(layout_strings)
@@ -69,19 +86,6 @@ d3.csv("bingo_data.csv", function(error, data) {
         .append("option")
         .attr("class", "pulldownoption")
         .text(function(d){ return d; });
-
-  //Get the pulldown variable
-
-var e = document.getElementById("pulldown_x_axis");
-var strUser = e.options[e.selectedIndex].text;
-console.log(strUser);
-/*
-$(document).ready(function() {
-  $(".pulldown_x_axis").change(function(){
-    x_axis_choice = axis_choices
-  });
-*/
-
 
 	//Get list of elements (e.g. TAs) for the y-axis
   var y_list = d3.nest()
