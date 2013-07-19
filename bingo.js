@@ -30,20 +30,17 @@ var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom");
 
-//hard-coding axis options
+//Hard-coding axis options
 var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
                     {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
 
-//Set a_axis_choice to tas by default
-var layout_choice = "Pipeline Balance";
-var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice]; 
-
-/*
-var x_axis_choice = axis_choices.filter(function(d,i) {
-  if (axis_choices[i][axis_choice] !== undefined) {return i;} //axis_choices[i].value;
-    });
-*/
+var layout_choice = "Pipeline Balance"; //Text string of selected option
+var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
+var layout_strings = []; //layout_strings is an array of the layout options as text strings
+for(i=0;i<layout_choices.length;i++) {
+  layout_strings[i] = d3.keys(layout_choices[i]);
+  };
 
 //Get the data and start drawing
 d3.csv("bingo_data.csv", function(error, data) {
@@ -55,24 +52,23 @@ d3.csv("bingo_data.csv", function(error, data) {
     d.sb = d[layout_data.cfill]; 
   });
 
-
   //build the drop-down for choosing the x-axis
   d3.select(".pulldownrow")
     //add label
     .append("div")
       .attr("class", "pulldownlabel")
-      .text("X Axis: ")
+      .text("Choose Layout: ")
     //add drop-down
     .append("select")
       .attr("id", "pulldown_x_axis")
     //.on("change", change)
     //add options
     .selectAll("option")
-      .data(layout_choices, function(d,i) {return d[0].key;})
+      .data(layout_strings)
       .enter()
         .append("option")
         .attr("class", "pulldownoption")
-        .text(function(d){ return d.value; });
+        .text(function(d){ return d; });
 
   //Get the pulldown variable
 
