@@ -24,9 +24,9 @@ body {
 }
 
 .label {
-	  stroke: blue;
+	  fill: blue;
 	  font-size:1.2em;
-	  stroke-width:0.3;
+    font-weight:bold;
 }
 
 .pulldownlabel {
