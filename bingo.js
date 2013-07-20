@@ -7,6 +7,14 @@ $(document).ready(function() {
   });
 });
 
+//Indices that we'll need to pull from Analytica
+var tasIndex = ["CNS","Dermatology","Endocrine Disorder","Immunology","Ophthalmology"];
+var statusesIndex = ["ACTIVE","AUTHORIZED","PLANNED"];
+var bucketsIndex = ["Potential","Considered","Committed"];
+var phasesIndex = ["Preclinical","Phase 1","Phase 2","Phase 3","NDA"];
+var compoundsIndex = ["ATH-235","CNS-025","CNS-072","CNS-534","CNS-612","CNS-785","CNS-956","CNS-989","ENDC-522","ENDC-560","ENDC-867","ENDC-920","IMM-060","IMM-165","IMM-211","IMM-455","OPTH-001","OPTH-244"];
+var indicationsIndex = ["Acne","Acute Migraine","Acute Pain","Alopecia","Alzheimer's disease","Ankylosing Spondylitis","Anxiety Disorder","Cognitive Impairment","Diabetes Mellitus","Diabetic Nephropathy","Glaucoma","Goiter","Lambert-Eaton Syndrome","Muscular Disorder","Myxedema","Psoriasis","Rheumatoid Arthritis","Sjogren's Sydrome","Smoking Cessation","Thyroid nodules"];
+
 //delcare global variables for data. this way when they get updated the data will be available globally
 var x_list = [];
 var y_list = [];
@@ -257,7 +265,7 @@ function doTheD3() {
 };
 
 doTheD3();
-alert(color.domain());
+var spam = color.domain();
 doTheLegend();
 
 function reDraw() {
