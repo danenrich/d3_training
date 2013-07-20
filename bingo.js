@@ -2,7 +2,7 @@ $(document).ready(function() {
   //doing this because the .on("change", change_layout) doesn't seem to be working
   $("#pulldown_layout").change(function() {
     alert("Your mom");
-    layout_choice = "Alignment";
+    layout_choice = $(this).val();
     reDraw();
   });
 });
@@ -14,6 +14,7 @@ var bucketsIndex = ["Potential","Considered","Committed"];
 var phasesIndex = ["Preclinical","Phase 1","Phase 2","Phase 3","NDA"];
 var compoundsIndex = ["ATH-235","CNS-025","CNS-072","CNS-534","CNS-612","CNS-785","CNS-956","CNS-989","ENDC-522","ENDC-560","ENDC-867","ENDC-920","IMM-060","IMM-165","IMM-211","IMM-455","OPTH-001","OPTH-244"];
 var indicationsIndex = ["Acne","Acute Migraine","Acute Pain","Alopecia","Alzheimer's disease","Ankylosing Spondylitis","Anxiety Disorder","Cognitive Impairment","Diabetes Mellitus","Diabetic Nephropathy","Glaucoma","Goiter","Lambert-Eaton Syndrome","Muscular Disorder","Myxedema","Psoriasis","Rheumatoid Arthritis","Sjogren's Sydrome","Smoking Cessation","Thyroid nodules"];
+var titles = [{"tas":"TA"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},{"phases":"Phase"},{"compounds":"Compound"},{"indications":"Indication"}];
 
 //delcare global variables for data. this way when they get updated the data will be available globally
 var x_list = [];
@@ -53,6 +54,7 @@ var xAxis = d3.svg.axis()
   .orient("bottom");
 
 //Build the layout selector
+var layout_data =[];
 var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
                     {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
@@ -80,6 +82,10 @@ function doTheAxes() {
     xScale.domain(x_list.map(function(d) { return d; }));
     yScale.domain(y_list.map(function(d) { return d; }));
 
+    spam = layout_data["y"];
+    spu = titles[0][spam];
+    
+
     //Write the y-axis
     svg.append("g")
         .attr("class", "y axis")
@@ -89,7 +95,7 @@ function doTheAxes() {
         .attr("transform", "rotate(-90)")
         .attr("y", "-135px")
         .attr("x", -height/2 + "px")
-        .text("TA");
+        .text(titles.filter(function(d,i) {return titles[i][layout_data["y"]] !== undefined})[0][layout_data["y"]]);
 
     //Write the x-axis
     svg.append("g")
@@ -100,7 +106,7 @@ function doTheAxes() {
         .attr("class", "label")
         .attr("y", "45px")
         .attr("x", width/2 + "px")
-        .text("Phase");
+        .text(titles.filter(function(d,i) {return titles[i][layout_data["x"]] !== undefined})[0][layout_data["x"]]);
 
    //Create the x-grid
     var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d; }));
@@ -157,7 +163,7 @@ function doTheLegend() {
 
 //pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
 function doTheLayout(returnMe) {
-  var layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
+  layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
   var layout_strings = []; //layout_strings is an array of the layout options as text strings
   for(i=0;i<layout_choices.length;i++) {
     layout_strings[i] = d3.keys(layout_choices[i]);
@@ -265,7 +271,9 @@ function reDraw() {
   var transition = svg.transition().duration(750);
 
   //doTheLegend();
-
+  doTheAxes();
+  /*
   transition.select(".x_axis")
     .call(xAxis);
+  */
 };
