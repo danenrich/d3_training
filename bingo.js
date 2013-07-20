@@ -74,7 +74,7 @@ var layout_dropdown = d3.select(".pulldownrow")
 function doTheAxes() {
     x_list = phasesIndex.reverse();
     y_list = tasIndex;
-    z_list = statusesIndex;
+    z_list = bucketsIndex;
 
     //Set the x- and y-axis domains
     xScale.domain(x_list.map(function(d) { return d; }));
@@ -191,18 +191,6 @@ function doTheD3() {
       d.z = +d[myLayout.z];
       d.cfill = d[myLayout.cfill];
     });
-
-    /*
-    //Get list of elements (e.g. TAs) for the y-axis
-    y_list = d3.nest()
-      .key(function(d) { return d.y; }).sortKeys(d3.ascending)
-      .entries(data);
-
-    //Get list of elements (e.g. Phases) for the x-axis
-    x_list = d3.nest()
-      .key(function(d) { return d.x; }).sortKeys(d3.ascending)
-      .entries(data);
-    */
 
     doTheAxes();
 
