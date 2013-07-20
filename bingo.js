@@ -192,8 +192,6 @@ function doTheD3() {
       d.cfill = d[myLayout.cfill];
     });
 
-    doTheAxes();
-
     //Create tree data structure
     var dataNest = d3.nest()
       .key(function(d) { return d.y; }).sortKeys(d3.ascending)
@@ -259,6 +257,7 @@ function doTheD3() {
   });
 };
 
+doTheAxes();
 doTheD3();
 doTheLegend();
 
