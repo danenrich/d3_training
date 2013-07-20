@@ -3,9 +3,14 @@ $(document).ready(function() {
   $("#pulldown_layout").change(function() {
     alert("Your mom");
     layout_choice = "Alignment";
-    doTheD3();
+    reDraw();
   });
 });
+
+//delcare global variables for data. this way when they get updated the data will be available globally
+var x_list = [];
+var y_list = [];
+
 //Set the margins for the chart
 var margin = {top: 50, right: 150, bottom: 80, left: 150},
     width = 1080 - margin.left - margin.right,
@@ -113,7 +118,29 @@ function doTheAxes(x_list,y_list) {
             return yScale(d);})
         .attr('x1', xScale.rangeExtent()[0])
         .attr('x2', xScale.rangeExtent()[1]);
-};
+}
+
+function doTheLegend() {
+  //draw the legendy thing
+  var legend = svg.selectAll(".legend")
+      .data(color.domain())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+}
 
 //pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
 function doTheLayout(returnMe) {
@@ -125,19 +152,17 @@ function doTheLayout(returnMe) {
   if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}}
 }
 
-      //add options
-      var layout_options =  layout_dropdown.selectAll("option")
-        .data(doTheLayout("strings"));
+//add options to dropdown
+var layout_options =  layout_dropdown.selectAll("option")
+  .data(doTheLayout("strings"));
 
-      layout_options.enter()
-          .append("option")
-          .attr("class", "pulldownoption")
-          .text(function(d){ return d; });
+layout_options.enter()
+    .append("option")
+    .attr("class", "pulldownoption")
+    .text(function(d){ return d; });
 
-      layout_options.exit()
-        .remove();
-
-doTheD3();
+layout_options.exit()
+  .remove();
 
 //This is what you call when you want to re-draw the graph
 function doTheD3() {
@@ -155,14 +180,16 @@ function doTheD3() {
     });
 
     //Get list of elements (e.g. TAs) for the y-axis
-    var y_list = d3.nest()
+    y_list = d3.nest()
       .key(function(d) { return d.y; }).sortKeys(d3.ascending)
       .entries(data);
 
     //Get list of elements (e.g. Phases) for the x-axis
-    var x_list = d3.nest()
+    x_list = d3.nest()
       .key(function(d) { return d.x; }).sortKeys(d3.ascending)
       .entries(data);
+
+    doTheAxes(x_list,y_list);
 
     //Create tree data structure
     var dataNest = d3.nest()
@@ -171,12 +198,6 @@ function doTheD3() {
       //***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
       .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
       .entries(data);
-
-    var spam = d3.nest()
-      .key(function(d) { return parseFloat(-d.z); }).sortKeys(d3.ascending)
-      .entries(data);
-
-    doTheAxes(x_list,y_list);
 
     //Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
     //NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
@@ -231,35 +252,19 @@ function doTheD3() {
                 }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
               .style("fill", function(d) { return color(d.cfill); })
               .append("svg:title")
-              .text(function(d) { return d.names; })
-            .exit()
-              .remove();         
-
-    //draw the legendy thing  
-    var legend = svg.selectAll(".legend")
-        .data(color.domain())
-      .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
-
-    legend.append("rect")
-        .attr("x", width - 18)
-        .attr("width", 18)
-        .attr("height", 18)
-        .style("fill", color);
-
-    legend.append("text")
-        .attr("x", width - 24)
-        .attr("y", 9)
-        .attr("dy", ".35em")
-        .style("text-anchor", "end")
-        .text(function(d) { return d; });
-
+              .text(function(d) { return d.names; });
   });
 };
-/*
+
+doTheD3();
+alert(color.domain());
+doTheLegend();
+
 function reDraw() {
-  transition.select(.x_axis)
-    .call(xAxis)
+  var transition = svg.transition().duration(750);
+
+  //doTheLegend();
+
+  transition.select(".x_axis")
+    .call(xAxis);
 };
-*/
