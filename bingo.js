@@ -18,6 +18,7 @@ var indicationsIndex = ["Acne","Acute Migraine","Acute Pain","Alopecia","Alzheim
 //delcare global variables for data. this way when they get updated the data will be available globally
 var x_list = [];
 var y_list = [];
+var z_list = [];
 
 //Set the margins for the chart
 var margin = {top: 50, right: 150, bottom: 80, left: 150},
@@ -70,10 +71,14 @@ var layout_dropdown = d3.select(".pulldownrow")
     //.on("change", change_layout) doesn't seem to be applying, so doing in jquery
     .attr("class","myclass");
 
-function doTheAxes(x_list,y_list) {
+function doTheAxes() {
+    x_list = phasesIndex.reverse();
+    y_list = tasIndex;
+    z_list = statusesIndex;
+
     //Set the x- and y-axis domains
-    xScale.domain(x_list.map(function(d) { return d.key; }));
-    yScale.domain(y_list.map(function(d) { return d.key; }));
+    xScale.domain(x_list.map(function(d) { return d; }));
+    yScale.domain(y_list.map(function(d) { return d; }));
 
     //Write the y-axis
     svg.append("g")
@@ -98,7 +103,7 @@ function doTheAxes(x_list,y_list) {
         .text("Phase");
 
    //Create the x-grid
-    var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d.key; }));
+    var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d; }));
 
     xgrid.enter().append('line');
     xgrid.exit().remove();
@@ -113,7 +118,7 @@ function doTheAxes(x_list,y_list) {
         .attr('y2', yScale.rangeExtent()[1]);
 
    //Create the y-grid
-    var ygrid = svg.selectAll('.ygrid').data(y_list.map(function(d) { return d.key; }));
+    var ygrid = svg.selectAll('.ygrid').data(y_list.map(function(d) { return d; }));
 
     ygrid.enter().append('line');
     ygrid.exit().remove();
@@ -131,7 +136,7 @@ function doTheAxes(x_list,y_list) {
 function doTheLegend() {
   //draw the legendy thing
   var legend = svg.selectAll(".legend")
-      .data(color.domain())
+      .data(z_list)
     .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
@@ -187,6 +192,7 @@ function doTheD3() {
       d.cfill = d[myLayout.cfill];
     });
 
+    /*
     //Get list of elements (e.g. TAs) for the y-axis
     y_list = d3.nest()
       .key(function(d) { return d.y; }).sortKeys(d3.ascending)
@@ -196,8 +202,9 @@ function doTheD3() {
     x_list = d3.nest()
       .key(function(d) { return d.x; }).sortKeys(d3.ascending)
       .entries(data);
+    */
 
-    doTheAxes(x_list,y_list);
+    doTheAxes();
 
     //Create tree data structure
     var dataNest = d3.nest()
@@ -265,7 +272,6 @@ function doTheD3() {
 };
 
 doTheD3();
-var spam = color.domain();
 doTheLegend();
 
 function reDraw() {
