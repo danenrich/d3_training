@@ -1,4 +1,7 @@
 $(document).ready(function() {
+  //set default value
+  $("#pulldown_layout option:contains('"+layout_choice+"')").attr("selected", "selected"); //in the drop-down, select the default selection
+
   //doing this because the .on("change", change_layout) doesn't seem to be working
   $("#pulldown_layout").change(function() {
     alert("Your mom");
@@ -33,6 +36,44 @@ var color = d3.scale.category10();
 var pulldownrow = d3.select("body").append("div")
   .attr("class", "pulldownrow");
 
+//Build the layout selector
+var layout_data =[];
+var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
+                    {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
+                    {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
+
+var layout_choice = "Compound-Indications" //"Pipeline Balance"; //Text string of selected option
+
+//build the drop-down for choosing the layout
+var layout_dropdown = d3.select(".pulldownrow")
+  //add label
+  .append("div")
+    .attr("class", "pulldownlabel")
+    .text("Choose Layout: ")
+  //add drop-down
+  .append("select")
+    .attr("id", "pulldown_layout")
+    //.on("change", change_layout) doesn't seem to be applying, so doing in jquery
+
+//pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
+function doTheLayout(returnMe) {
+  layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined;})[0][layout_choice];  //The x,y,z,fill for the selected layout
+  var layout_strings = []; //layout_strings is an array of the layout options as text strings
+  for(i=0;i<layout_choices.length;i++) {
+    layout_strings[i] = d3.keys(layout_choices[i]);
+  }
+  if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}}
+}
+
+//add options to dropdown
+var layout_options =  layout_dropdown.selectAll("option")
+  .data(doTheLayout("strings"))
+  .enter()
+    .append("option")
+    .attr("class", "pulldownoption")
+    .text(function(d){ return d; });
+
+
 //Drop the SVG object after the pulldowns
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -53,26 +94,6 @@ var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom");
 
-//Build the layout selector
-var layout_data =[];
-var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
-                    {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
-                    {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
-
-var layout_choice = "Pipeline Balance"; //Text string of selected option
-
-//build the drop-down for choosing the layout
-var layout_dropdown = d3.select(".pulldownrow")
-  //add label
-  .append("div")
-    .attr("class", "pulldownlabel")
-    .text("Choose Layout: ")
-  //add drop-down
-  .append("select")
-    .attr("id", "pulldown_layout")
-    //.on("change", change_layout) doesn't seem to be applying, so doing in jquery
-    .attr("class","myclass");
-
 function doTheAxes() {
     x_list = phasesIndex.reverse();
     y_list = tasIndex;
@@ -83,8 +104,7 @@ function doTheAxes() {
     yScale.domain(y_list.map(function(d) { return d; }));
 
     spam = layout_data["y"];
-    spu = titles[0][spam];
-    
+    spu = titles[0][spam];   
 
     //Write the y-axis
     svg.append("g")
@@ -95,7 +115,7 @@ function doTheAxes() {
         .attr("transform", "rotate(-90)")
         .attr("y", "-135px")
         .attr("x", -height/2 + "px")
-        .text(titles.filter(function(d,i) {return titles[i][layout_data["y"]] !== undefined})[0][layout_data["y"]]);
+        .text(titles.filter(function(d,i) {return titles[i][layout_data["y"]] !== undefined;})[0][layout_data["y"]]);
 
     //Write the x-axis
     svg.append("g")
@@ -106,7 +126,7 @@ function doTheAxes() {
         .attr("class", "label")
         .attr("y", "45px")
         .attr("x", width/2 + "px")
-        .text(titles.filter(function(d,i) {return titles[i][layout_data["x"]] !== undefined})[0][layout_data["x"]]);
+        .text(titles.filter(function(d,i) {return titles[i][layout_data["x"]] !== undefined;})[0][layout_data["x"]]);
 
    //Create the x-grid
     var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d; }));
@@ -160,28 +180,6 @@ function doTheLegend() {
       .style("text-anchor", "end")
       .text(function(d) { return d; });
 }
-
-//pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
-function doTheLayout(returnMe) {
-  layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined})[0][layout_choice];  //The x,y,z,fill for the selected layout
-  var layout_strings = []; //layout_strings is an array of the layout options as text strings
-  for(i=0;i<layout_choices.length;i++) {
-    layout_strings[i] = d3.keys(layout_choices[i]);
-  }
-  if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}}
-}
-
-//add options to dropdown
-var layout_options =  layout_dropdown.selectAll("option")
-  .data(doTheLayout("strings"));
-
-layout_options.enter()
-    .append("option")
-    .attr("class", "pulldownoption")
-    .text(function(d){ return d; });
-
-layout_options.exit()
-  .remove();
 
 //This is what you call when you want to re-draw the graph
 function doTheD3() {
