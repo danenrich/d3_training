@@ -42,7 +42,7 @@ var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"
                     {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
 
-var layout_choice = "Compound-Indications" //"Pipeline Balance"; //Text string of selected option
+var layout_choice = "Compound-Indications"; //"Pipeline Balance"; //Text string of selected option
 
 //build the drop-down for choosing the layout
 var layout_dropdown = d3.select(".pulldownrow")
@@ -52,7 +52,7 @@ var layout_dropdown = d3.select(".pulldownrow")
     .text("Choose Layout: ")
   //add drop-down
   .append("select")
-    .attr("id", "pulldown_layout")
+    .attr("id", "pulldown_layout");
     //.on("change", change_layout) doesn't seem to be applying, so doing in jquery
 
 //pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
@@ -104,7 +104,7 @@ function doTheAxes() {
     yScale.domain(y_list.map(function(d) { return d; }));
 
     spam = layout_data["y"];
-    spu = titles[0][spam];   
+    spu = titles[0][spam];
 
     //Write the y-axis
     svg.append("g")
@@ -253,13 +253,13 @@ function doTheD3() {
               .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box	
               .attr("r", function(d) {
                 if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
-                  {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;};}
+                  {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
                 }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
               .style("fill", function(d) { return color(d.cfill); })
               .append("svg:title")
               .text(function(d) { return d.names; });
   });
-};
+}
 
 doTheAxes();
 doTheD3();
