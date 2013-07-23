@@ -10,6 +10,8 @@ $(document).ready(function() {
     $(".y.axis").remove();
     $(".x.axis").remove();
     doTheAxes();
+    $(".legend").remove();
+    doTheLegend();
   });
 });
 
@@ -173,16 +175,16 @@ function doTheLegend() {
       .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
 
   legend.append("rect")
-      .attr("x", width - 18)
+      .attr("x", width - 82)
       .attr("width", 18)
       .attr("height", 18)
       .style("fill", color);
 
   legend.append("text")
-      .attr("x", width - 24)
+      .attr("x", width - 58)
       .attr("y", 9)
       .attr("dy", ".35em")
-      .style("text-anchor", "end")
+      .style("text-anchor", "start")
       .text(function(d) { return d; });
 }
 
