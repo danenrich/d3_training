@@ -6,6 +6,7 @@ $(document).ready(function() {
   $("#pulldown_layout").change(function() {
     layout_choice = $(this).val();
     //reDraw();
+    doTheLayout();
     $(".y.axis").remove();
     $(".x.axis").remove();
     doTheAxes();
@@ -57,16 +58,6 @@ var layout_dropdown = d3.select(".pulldownrow")
     .attr("id", "pulldown_layout");
     //.on("change", change_layout) doesn't seem to be applying, so doing in jquery
 
-//pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
-function doTheLayout(returnMe) {
-  layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined;})[0][layout_choice];  //The x,y,z,fill for the selected layout
-  var layout_strings = []; //layout_strings is an array of the layout options as text strings
-  for(i=0;i<layout_choices.length;i++) {
-    layout_strings[i] = d3.keys(layout_choices[i]);
-  }
-  if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}}
-}
-
 //add options to dropdown
 var layout_options =  layout_dropdown.selectAll("option")
   .data(doTheLayout("strings"))
@@ -95,6 +86,16 @@ var xScale = d3.scale.ordinal().rangeRoundBands([width, 0]);
 var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom");
+
+//pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
+function doTheLayout(returnMe) {
+  layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined;})[0][layout_choice];  //The x,y,z,fill for the selected layout
+  var layout_strings = []; //layout_strings is an array of the layout options as text strings
+  for(i=0;i<layout_choices.length;i++) {
+    layout_strings[i] = d3.keys(layout_choices[i]);
+  }
+  if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}}
+}
 
 //Takes x, y, z, cFill (as strings), returns that index for the selected layout.
 function getSelectedIndex(n) {
