@@ -5,7 +5,7 @@ $(document).ready(function() {
   //doing this because the .on("change", change_layout) doesn't seem to be working
   $("#pulldown_layout").change(function() {
     layout_choice = $(this).val();
-    reDraw();
+    //reDraw();
     $(".y.axis").remove();
     $(".x.axis").remove();
     doTheAxes();
@@ -24,7 +24,7 @@ var titles = [{"tas":"TA"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},
 //delcare global variables for data. this way when they get updated the data will be available globally
 var x_list = [];
 var y_list = [];
-var z_list = [];
+var cFill_list = [];
 
 //Set the margins for the chart
 var margin = {top: 50, right: 150, bottom: 80, left: 150},
