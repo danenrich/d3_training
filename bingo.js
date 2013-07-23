@@ -4,9 +4,11 @@ $(document).ready(function() {
 
   //doing this because the .on("change", change_layout) doesn't seem to be working
   $("#pulldown_layout").change(function() {
-    alert("Your mom");
     layout_choice = $(this).val();
     reDraw();
+    $(".y.axis").remove();
+    $(".x.axis").remove();
+    doTheAxes();
   });
 });
 
@@ -38,9 +40,9 @@ var pulldownrow = d3.select("body").append("div")
 
 //Build the layout selector
 var layout_data =[];
-var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cfill:"buckets"}},
-                    {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cfill:"tas"}},
-                    {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cfill:"phases"}}];
+var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cFill:"buckets"}},
+                    {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cFill:"tas"}},
+                    {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cFill:"phases"}}];
 
 var layout_choice = "Compound-Indications"; //"Pipeline Balance"; //Text string of selected option
 
@@ -94,17 +96,19 @@ var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom");
 
+//Takes x, y, z, cFill (as strings), returns that index for the selected layout.
+function getSelectedIndex(n) {
+  return eval(layout_data[n]+"Index");
+}
+
 function doTheAxes() {
-    x_list = phasesIndex.reverse();
-    y_list = tasIndex;
-    z_list = bucketsIndex;
+    x_list = getSelectedIndex("x");//phasesIndex.reverse();
+    y_list = getSelectedIndex("y");//tasIndex;
+    cFill_list = getSelectedIndex("cFill");
 
     //Set the x- and y-axis domains
     xScale.domain(x_list.map(function(d) { return d; }));
     yScale.domain(y_list.map(function(d) { return d; }));
-
-    spam = layout_data["y"];
-    spu = titles[0][spam];
 
     //Write the y-axis
     svg.append("g")
@@ -162,7 +166,7 @@ function doTheAxes() {
 function doTheLegend() {
   //draw the legendy thing
   var legend = svg.selectAll(".legend")
-      .data(z_list)
+      .data(cFill_list)
     .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
