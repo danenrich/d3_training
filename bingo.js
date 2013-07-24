@@ -218,16 +218,22 @@ function doTheD3() {
       .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
       .entries(data);
 
-    flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }).sort(function(d) {return d3.ascending(d.cat);}); //sorting from highest to lowest
+    flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }).sort(function(d1,d2) {return d3.ascending(d1.cat,d2.cat);}); //sorting from highest to lowest z and alphabetically by category (though that probably doesn't matter)
+    flatData.forEach(function(d) {d.position = 1;});
 
-    //Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
-    //NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
-    var maxProjArray = d3.nest()
-      .key(function(d) { return d.y + ' ' + d.x; }).sortKeys(d3.ascending)
-      .rollup(function(leaves) { return leaves.length;})
-      .entries(data);
-      //This is the maximum number of projects in any x-y (e.g. TA-Phase) bucket
-      var maxProjs = d3.max(maxProjArray, function(d) { return d.values; });
+    //Get unique list of x-y value pairs (e.g. TA-Phase combinations)
+    categories = d3.keys(d3.nest().key(function(d) {return d.cat;}).map(data));
+
+    //Loop through the categories and assign each project its position in each      
+    for(i=0;i<categories.length;i++) {
+      poscount = 1;
+      for (j=0;j<flatData.length;j++) {
+        if (flatData[j].cat === categories[i]) {flatData[j].position = poscount; poscount++;} //If we find a project in the given category, assign it the position and increment the position count by 1
+      }
+    }
+
+    //This is the maximum number of projects in any x-y (e.g. TA-Phase) bucket
+    maxProjs = d3.max(flatData, function(d) { return d.position;});
 
     //Get # of x and y elements (e.g. TAs and Phases)
     var numXs = xScale.domain().length;
@@ -262,7 +268,7 @@ function doTheD3() {
             bubbles.enter()
               .append("circle")
               .attr("class", "dot")
-              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(d.position + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
               .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box	
               .attr("r", function(d) {
                 if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
