@@ -240,8 +240,8 @@ function doTheD3() {
     var numYs = yScale.domain().length;
 
     //Determine how many pixels of "personal space" each bubble will get
-    var bubble_padding = 5; //Amount of space between the bubbles and the axes.
-    var xSpace = (xScale.rangeBand() - bubble_padding*(maxProjs+1))/maxProjs; //bubble_padding is the space between bubbles and between the bubbles and the axes; more padding means smaller bubble size
+    var bubble_padding = 5; //bubble_padding is the space between bubbles and between the bubbles and the axes; more padding means smaller bubble size
+    var xSpace = (xScale.rangeBand() - bubble_padding*(maxProjs+1))/maxProjs; //xSpace is the personal space allocated to each bubble
     var maxR = Math.min(xSpace,(yScale.rangeBand()-2*bubble_padding))/2; //The maximum diameter of a bubble is the lesser of row height and horizontal space allocated to each bubble
 
     //variables for scaling the z-axis of the bubbles
@@ -268,7 +268,7 @@ function doTheD3() {
             bubbles.enter()
               .append("circle")
               .attr("class", "dot")
-              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(d.position + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*((d.position-1) + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
               .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box	
               .attr("r", function(d) {
                 if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
