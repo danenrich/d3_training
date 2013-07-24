@@ -210,19 +210,11 @@ function doTheD3() {
       d.position = 0; //Placeholder for the project's order in its category
     });
 
-    //Create tree data structure
-    var dataNest = d3.nest()
-      .key(function(d) { return d.y; }).sortKeys(d3.ascending)
-      .key(function(d) { return d.x; }).sortKeys(d3.ascending)
-      //***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
-      .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
-      .entries(data);
-
-    flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }).sort(function(d1,d2) {return d3.ascending(d1.cat,d2.cat);}); //sorting from highest to lowest z and alphabetically by category (though that probably doesn't matter)
-    flatData.forEach(function(d) {d.position = 1;});
+    //sort the data from highest to lowest z and alphabetically by category (though that probably doesn't matter)
+    var flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }).sort(function(d1,d2) {return d3.ascending(d1.cat,d2.cat);}); 
 
     //Get unique list of x-y value pairs (e.g. TA-Phase combinations)
-    categories = d3.keys(d3.nest().key(function(d) {return d.cat;}).map(data));
+    var categories = d3.keys(d3.nest().key(function(d) {return d.cat;}).map(data));
 
     //Loop through the categories and assign each project its position in each      
     for(i=0;i<categories.length;i++) {
@@ -233,7 +225,7 @@ function doTheD3() {
     }
 
     //This is the maximum number of projects in any x-y (e.g. TA-Phase) bucket
-    maxProjs = d3.max(flatData, function(d) { return d.position;});
+    var maxProjs = d3.max(flatData, function(d) { return d.position;});
 
     //Get # of x and y elements (e.g. TAs and Phases)
     var numXs = xScale.domain().length;
