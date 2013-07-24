@@ -50,7 +50,7 @@ var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cFill:"
                     {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cFill:"tas"}},
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cFill:"phases"}}];
 
-var layout_choice = "Compound-Indications"; //Text string of selected option
+var layout_choice = "Pipeline Balance"; //Text string of selected option
 
 //build the drop-down for choosing the layout
 var layout_dropdown = d3.select(".pulldownrow")
@@ -216,6 +216,8 @@ function doTheD3() {
       .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
       .entries(data);
 
+    var flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }); //sorting from highest to lowest
+
     //Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
     //NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
     var maxProjArray = d3.nest()
@@ -249,10 +251,11 @@ function doTheD3() {
         .append("g")
         .attr("class","y_class");
 
+/*
     //Every time you pivot, the hierarchy may have a different # of values for the x- and y-axes. You need to get rid of the redundant ones.
     y_var.exit()
       .remove();
-
+*/
       //this is one level down
       var x_var = y_var.selectAll("g.x_class")
         .data(function (d) { return d.values;});
@@ -260,16 +263,26 @@ function doTheD3() {
       x_var.enter()
         .append("g")
         .attr("class","x_class");
-
+/*
       //Every time you pivot, the hierarchy may have a different # of values for the x- and y-axes. You need to get rid of the redundant ones.
       x_var.exit()
         .remove();
-
+*/
         //this is two levels down
-        var bubbles = x_var.selectAll(".dot")
+        bubbles = x_var.selectAll(".dot")
           .data(function (d) { return d.values;});
 
 //        if (firstTimeAtTheRodeo === 1) {
+            bubbles.transition()
+            .duration(3000)
+              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+              .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; }) //Positioning the bubbles vertically in the middle of the box              //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
+              .attr("r", function(d) {
+                if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
+                  {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
+                }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
+              .style("fill", function(d) { return color(d.cFill); });
+
             bubbles.enter()
               .append("circle")
               .attr("class", "dot")
@@ -282,18 +295,17 @@ function doTheD3() {
               .style("fill", function(d) { return color(d.cFill); })
               .append("svg:title")
               .text(function(d) { return d.names; });
+              //.transition()
+              //.duration(3000);
 
             bubbles.exit()
+              .transition()
+              .duration(4000)
               .remove();
- /*       }
+/*       }
         else {
-            bubbles.transition()
-            .duration(750)
-              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
-              .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box              //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
         }
 */
-
   });
 }
 
