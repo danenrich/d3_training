@@ -6,7 +6,6 @@ $(document).ready(function() {
   $("#pulldown_layout").change(function() {
     firstTimeAtTheRodeo = 0;
     layout_choice = $(this).val();
-    //reDraw();
     doTheLayout();
     $(".y.axis").remove();
     $(".x.axis").remove();
@@ -51,7 +50,7 @@ var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cFill:"
                     {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cFill:"tas"}},
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cFill:"phases"}}];
 
-var layout_choice = "Compound-Indications"; //"Pipeline Balance"; //Text string of selected option
+var layout_choice = "Compound-Indications"; //Text string of selected option
 
 //build the drop-down for choosing the layout
 var layout_dropdown = d3.select(".pulldownrow")
@@ -206,11 +205,11 @@ function doTheD3() {
       d.y = d[myLayout.y];
       d.x = d[myLayout.x];
       d.z = +d[myLayout.z];
-      d.cfill = d[myLayout.cfill];
+      d.cFill = d[myLayout.cFill];
     });
 
     //Create tree data structure
-    var dataNest = d3.nest()
+    dataNest = d3.nest()
       .key(function(d) { return d.y; }).sortKeys(d3.ascending)
       .key(function(d) { return d.x; }).sortKeys(d3.ascending)
       //***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
@@ -280,7 +279,7 @@ function doTheD3() {
                 if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
                   {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
                 }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-              .style("fill", function(d) { return color(d.cfill); })
+              .style("fill", function(d) { return color(d.cFill); })
               .append("svg:title")
               .text(function(d) { return d.names; });
 
@@ -299,11 +298,5 @@ function doTheD3() {
 }
 
 doTheAxes();
-doTheD3();
+doTheD3(); //doTheLayout() is embedded in here
 doTheLegend();
-
-function reDraw() {
-  var transition = svg.transition().duration(750);
-
-
-};
