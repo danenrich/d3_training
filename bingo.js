@@ -206,6 +206,7 @@ function doTheD3() {
       d.x = d[myLayout.x];
       d.z = +d[myLayout.z];
       d.cFill = d[myLayout.cFill];
+      d.cat = d.x + ' ' + d.y; //This is what we'll use to figure out the square in which the project belongs.
     });
 
     //Create tree data structure
@@ -216,13 +217,12 @@ function doTheD3() {
       .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
       .entries(data);
 
-    flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }); //sorting from highest to lowest
-    flatData["cat"] = "blah";
+    flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }).sort(function(d) {return d3.ascending(d.cat);}); //sorting from highest to lowest
 
     //Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
     //NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
     var maxProjArray = d3.nest()
-      .key(function(d) { return d.y + '' + d.x; }).sortKeys(d3.ascending)
+      .key(function(d) { return d.y + ' ' + d.x; }).sortKeys(d3.ascending)
       .rollup(function(leaves) { return leaves.length;})
       .entries(data);
       //This is the maximum number of projects in any x-y (e.g. TA-Phase) bucket
