@@ -244,23 +244,34 @@ function doTheD3() {
     // append the bubbles
     //the top-level variables contains the y, then the x, then the projects
     var y_var = svg.selectAll("g.y_class")
-      .data(dataNest)
-      .enter()
+      .data(dataNest);
+
+    y_var.enter()
         .append("g")
         .attr("class","y_class");
 
+    //Every time you pivot, the hierarchy may have a different # of values for the x- and y-axes. You need to get rid of the redundant ones.
+    y_var.exit()
+      .remove();
+
       //this is one level down
       var x_var = y_var.selectAll("g.x_class")
-        .data(function (d) { return d.values;})
-        .enter()
-          .append("g")
-          .attr("class","x_class");
+        .data(function (d) { return d.values;});
+
+      x_var.enter()
+        .append("g")
+        .attr("class","x_class");
+
+      //Every time you pivot, the hierarchy may have a different # of values for the x- and y-axes. You need to get rid of the redundant ones.
+      x_var.exit()
+        .remove();
+
+        //this is two levels down
+          bubbles = x_var.selectAll(".dot")
+            .data(function (d) { return d.values;});
 
         if (firstTimeAtTheRodeo === 1) {
-        //this is two levels down
-          x_var.selectAll(".dot")
-            .data(function (d) { return d.values;})
-            .enter()
+            bubbles.enter()
               .append("circle")
               .attr("class", "dot")
               .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
@@ -274,10 +285,10 @@ function doTheD3() {
               .text(function(d) { return d.names; });
         }
         else {
-          x_var.selectAll(".dot").transition()
-            .data(function (d) { return d.values;})
-            .enter()
-              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
+            bubbles.transition()
+            .duration(750)
+            .attr("cx",50);
+            //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
 /*This one works
           d3.selectAll(".dot").transition()
             .duration(750)
