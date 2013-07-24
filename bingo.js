@@ -209,14 +209,15 @@ function doTheD3() {
     });
 
     //Create tree data structure
-    dataNest = d3.nest()
+    var dataNest = d3.nest()
       .key(function(d) { return d.y; }).sortKeys(d3.ascending)
       .key(function(d) { return d.x; }).sortKeys(d3.ascending)
       //***************NEED TO CHANGE THIS TO SORT BY ASCENDING LAUNCH DATE******************
       .sortValues(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }) //sorting from highest to lowest
       .entries(data);
 
-    var flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }); //sorting from highest to lowest
+    flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }); //sorting from highest to lowest
+    flatData["cat"] = "blah";
 
     //Calculate the maximum number of projects in any x-y (e.g. TA-Phase) combo.
     //NB: You can't have multiple rollups within a nest, nor can you aggregate a level underneath a rollup. The solution is to create a key that is the unique x-y (e.g. TA-Phase) combo, then max across it.
@@ -242,38 +243,12 @@ function doTheD3() {
     var max_z = d3.max(data, function(d) { return d.z; });
     var min_z = d3.min(data, function(d) { return d.z > 0 ? d.z : max_z; });
 
-    // append the bubbles
-    //the top-level variables contains the y, then the x, then the projects
-    var y_var = svg.selectAll("g.y_class")
-      .data(dataNest);
-
-    y_var.enter()
-        .append("g")
-        .attr("class","y_class");
-
-/*
-    //Every time you pivot, the hierarchy may have a different # of values for the x- and y-axes. You need to get rid of the redundant ones.
-    y_var.exit()
-      .remove();
-*/
-      //this is one level down
-      var x_var = y_var.selectAll("g.x_class")
-        .data(function (d) { return d.values;});
-
-      x_var.enter()
-        .append("g")
-        .attr("class","x_class");
-/*
-      //Every time you pivot, the hierarchy may have a different # of values for the x- and y-axes. You need to get rid of the redundant ones.
-      x_var.exit()
-        .remove();
-*/
         //this is two levels down
-        bubbles = x_var.selectAll(".dot")
-          .data(function (d) { return d.values;});
+        bubbles = svg.selectAll(".dot")
+          .data(flatData);
 
 //        if (firstTimeAtTheRodeo === 1) {
-            bubbles.transition()
+/*            bubbles.transition()
             .duration(3000)
               .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
               .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; }) //Positioning the bubbles vertically in the middle of the box              //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
@@ -282,7 +257,7 @@ function doTheD3() {
                   {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
                 }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
               .style("fill", function(d) { return color(d.cFill); });
-
+*/
             bubbles.enter()
               .append("circle")
               .attr("class", "dot")
@@ -297,14 +272,11 @@ function doTheD3() {
               .text(function(d) { return d.names; });
               //.transition()
               //.duration(3000);
-
+/*
             bubbles.exit()
               .transition()
               .duration(4000)
               .remove();
-/*       }
-        else {
-        }
 */
   });
 }
