@@ -4,6 +4,7 @@ $(document).ready(function() {
 
   //doing this because the .on("change", change_layout) doesn't seem to be working
   $("#pulldown_layout").change(function() {
+    firstTimeAtTheRodeo = 0;
     layout_choice = $(this).val();
     //reDraw();
     doTheLayout();
@@ -274,8 +275,15 @@ function doTheD3() {
         }
         else {
           x_var.selectAll(".dot").transition()
+            .data(function (d) { return d.values;})
+            .enter()
+              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
+/*This one works
+          d3.selectAll(".dot").transition()
             .duration(750)
-            .attr("cx",50);
+            .attr("cx",50)
+            .style("fill", "red");
+end this one works*/
         }
 
 
