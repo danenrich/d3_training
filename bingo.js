@@ -267,10 +267,10 @@ function doTheD3() {
         .remove();
 
         //this is two levels down
-          bubbles = x_var.selectAll(".dot")
-            .data(function (d) { return d.values;});
+        var bubbles = x_var.selectAll(".dot")
+          .data(function (d) { return d.values;});
 
-        if (firstTimeAtTheRodeo === 1) {
+//        if (firstTimeAtTheRodeo === 1) {
             bubbles.enter()
               .append("circle")
               .attr("class", "dot")
@@ -283,20 +283,17 @@ function doTheD3() {
               .style("fill", function(d) { return color(d.cfill); })
               .append("svg:title")
               .text(function(d) { return d.names; });
-        }
+
+            bubbles.exit()
+              .remove();
+ /*       }
         else {
             bubbles.transition()
             .duration(750)
-            .attr("cx",50);
-            //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
-/*This one works
-          d3.selectAll(".dot").transition()
-            .duration(750)
-            .attr("cx",50)
-            .style("fill", "red");
-end this one works*/
+              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+              .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box              //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
         }
-
+*/
 
   });
 }
