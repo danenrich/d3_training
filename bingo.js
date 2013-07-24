@@ -12,8 +12,11 @@ $(document).ready(function() {
     doTheAxes();
     $(".legend").remove();
     doTheLegend();
+    doTheD3();
   });
 });
+
+var firstTimeAtTheRodeo = 1;
 
 //Indices that we'll need to pull from Analytica
 var tasIndex = ["CNS","Dermatology","Endocrine Disorder","Immunology","Ophthalmology"];
@@ -188,7 +191,9 @@ function doTheLegend() {
       .text(function(d) { return d; });
 }
 
-//This is what you call when you want to re-draw the graph
+
+var myLayout = [];
+
 function doTheD3() {
 
   var myLayout = doTheLayout("data");
@@ -240,7 +245,7 @@ function doTheD3() {
     var y_var = svg.selectAll("g.y_class")
       .data(dataNest)
       .enter()
-      .append("g")
+        .append("g")
         .attr("class","y_class");
 
       //this is one level down
@@ -250,6 +255,7 @@ function doTheD3() {
           .append("g")
           .attr("class","x_class");
 
+        if (firstTimeAtTheRodeo === 1) {
         //this is two levels down
           x_var.selectAll(".dot")
             .data(function (d) { return d.values;})
@@ -265,6 +271,14 @@ function doTheD3() {
               .style("fill", function(d) { return color(d.cfill); })
               .append("svg:title")
               .text(function(d) { return d.names; });
+        }
+        else {
+          x_var.selectAll(".dot").transition()
+            .duration(750)
+            .attr("cx",50);
+        }
+
+
   });
 }
 
@@ -275,10 +289,5 @@ doTheLegend();
 function reDraw() {
   var transition = svg.transition().duration(750);
 
-  //doTheLegend();
-  doTheAxes();
-  /*
-  transition.select(".x_axis")
-    .call(xAxis);
-  */
+
 };
