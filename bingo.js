@@ -10,22 +10,23 @@ $(document).ready(function() {
     $(".y.axis").remove();
     $(".x.axis").remove();
     doTheAxes();
-    $(".legend").remove();
+    //$(".legend").remove();
     doTheLegend();
     doTheD3();
   });
 });
 
-var firstTimeAtTheRodeo = 1;
-
 //Indices that we'll need to pull from Analytica
 var tasIndex = ["CNS","Dermatology","Endocrine Disorder","Immunology","Ophthalmology"];
 var statusesIndex = ["ACTIVE","AUTHORIZED","PLANNED"];
 var bucketsIndex = ["Potential","Considered","Committed"];
-var phasesIndex = ["NDA","Phase 3","Phase 2","Phase 1", "Preclinical"]; //Order needs to be reversed; easier to send a reversed index than to figure out which indices need to be reversed
+var phasesIndex = ["Preclinical","Phase 1","Phase 2","Phase 3","NDA"];
 var compoundsIndex = ["ATH-235","CNS-025","CNS-072","CNS-534","CNS-612","CNS-785","CNS-956","CNS-989","ENDC-522","ENDC-560","ENDC-867","ENDC-920","IMM-060","IMM-165","IMM-211","IMM-455","OPTH-001","OPTH-244"];
 var indicationsIndex = ["Acne","Acute Migraine","Acute Pain","Alopecia","Alzheimer's disease","Ankylosing Spondylitis","Anxiety Disorder","Cognitive Impairment","Diabetes Mellitus","Diabetic Nephropathy","Glaucoma","Goiter","Lambert-Eaton Syndrome","Muscular Disorder","Myxedema","Psoriasis","Rheumatoid Arthritis","Sjogren's Sydrome","Smoking Cessation","Thyroid nodules"];
 var titles = [{"tas":"TA"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},{"phases":"Phase"},{"compounds":"Compound"},{"indications":"Indication"}];
+
+//Specify which indices should be reversed for the axes. NB: The legend seems to right itself for phases (though not for the others), so not reversing there.
+var reverseIndices = ["phases"];
 
 //delcare global variables for data. this way when they get updated the data will be available globally
 var x_list = [];
@@ -104,12 +105,15 @@ function doTheLayout(returnMe) {
 
 //Takes x, y, z, cFill (as strings), returns that index for the selected layout.
 function getSelectedIndex(n) {
-  return eval(layout_data[n]+"Index");
+  var copiedIndex = eval(layout_data[n]+"Index").slice(0); //Using slice copies the index elements to the new index. Without this we're pointing at the original, and any operations on the pointer will also change the original.
+  alert(n + " values: " + (reverseIndices.indexOf(layout_data[n])!=-1));
+  if (reverseIndices.indexOf(layout_data[n])!=-1) {return copiedIndex;} else {return copiedIndex;}  //If the index is identified as one that should be reversed, reverse it.
 }
 
 function doTheAxes() {
-    x_list = getSelectedIndex("x");//phasesIndex.reverse();
-    y_list = getSelectedIndex("y");//tasIndex;
+    //Populate the x, y, and fill lists with the selected indices
+    x_list = getSelectedIndex("x");
+    y_list = getSelectedIndex("y");
     cFill_list = getSelectedIndex("cFill");
 
     //Set the x- and y-axis domains
@@ -156,8 +160,10 @@ function doTheAxes() {
    //Create the y-grid
     var ygrid = svg.selectAll('.ygrid').data(y_list.map(function(d) { return d; }));
 
-    ygrid.enter().append('line');
-    ygrid.exit().remove();
+    ygrid.enter().
+      append('line');
+    ygrid.exit()
+      .remove();
 
     //We're drawing straight horizontal lines that span the height of the graph (xScale.rangeExtent) and hit the points between each bucket
     ygrid.attr('class','ygrid')
@@ -170,10 +176,14 @@ function doTheAxes() {
 }
 
 function doTheLegend() {
+  //Remove the existing legend; transitions don't really make sense here
+  svg.selectAll(".legend").remove();
+
   //draw the legendy thing
   var legend = svg.selectAll(".legend")
-      .data(cFill_list)
-    .enter().append("g")
+      .data(cFill_list);
+
+  legend.enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
 
@@ -190,7 +200,6 @@ function doTheLegend() {
       .style("text-anchor", "start")
       .text(function(d) { return d; });
 }
-
 
 var myLayout = [];
 
@@ -227,10 +236,6 @@ function doTheD3() {
     //This is the maximum number of projects in any x-y (e.g. TA-Phase) bucket
     var maxProjs = d3.max(flatData, function(d) { return d.position;});
 
-    //Get # of x and y elements (e.g. TAs and Phases)
-    var numXs = xScale.domain().length;
-    var numYs = yScale.domain().length;
-
     //Determine how many pixels of "personal space" each bubble will get
     var bubble_padding = 5; //bubble_padding is the space between bubbles and between the bubbles and the axes; more padding means smaller bubble size
     var xSpace = (xScale.rangeBand() - bubble_padding*(maxProjs+1))/maxProjs; //xSpace is the personal space allocated to each bubble
@@ -242,41 +247,42 @@ function doTheD3() {
     var max_z = d3.max(data, function(d) { return d.z; });
     var min_z = d3.min(data, function(d) { return d.z > 0 ? d.z : max_z; });
 
-        //this is two levels down
-        bubbles = svg.selectAll(".dot")
-          .data(flatData);
+    //Bind data to the bubbles
+    bubbles = svg.selectAll(".dot")
+      .data(flatData);
 
-//        if (firstTimeAtTheRodeo === 1) {
-            bubbles.transition()
-            .duration(1000)
-              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*((d.position-1) + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
-              .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; }) //Positioning the bubbles vertically in the middle of the box              //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
-              .attr("r", function(d) {
-                if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
-                  {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
-                }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-              .style("fill", function(d) { return color(d.cFill); });
+        //First, move existing bubbles
+        bubbles.transition()
+        .duration(1000)
+          .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*((d.position-1) + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+          .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; }) //Positioning the bubbles vertically in the middle of the box              //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
+          .attr("r", function(d) {
+            if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
+              {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
+            }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
+          .style("fill", function(d) { return color(d.cFill); });
 
-            bubbles.enter()
-              .append("circle")
-              .attr("class", "dot")
-              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*((d.position-1) + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
-              .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box	
-              .attr("r", function(d) {
-                if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
-                  {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
-                }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-              .style("fill", function(d) { return color(d.cFill); })
-              .append("svg:title")
-              .text(function(d) { return d.names; });
-              //.transition()
-              //.duration(3000);
-/*
-            bubbles.exit()
-              .transition()
-              .duration(4000)
-              .remove();
-*/
+        //Draw new bubbles
+        bubbles.enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*((d.position-1) + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+          .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box	
+          .attr("r", function(d) {
+            if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
+              {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
+            }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
+          .style("fill", function(d) { return color(d.cFill); })
+          .append("svg:title")
+          .text(function(d) { return d.names; });
+          //.transition()
+          //.duration(3000);
+
+        //In case projects leave for some reason
+        bubbles.exit()
+          .transition()
+          .duration(750)
+          .remove();
   });
 }
 
