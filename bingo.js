@@ -22,7 +22,7 @@ var firstTimeAtTheRodeo = 1;
 var tasIndex = ["CNS","Dermatology","Endocrine Disorder","Immunology","Ophthalmology"];
 var statusesIndex = ["ACTIVE","AUTHORIZED","PLANNED"];
 var bucketsIndex = ["Potential","Considered","Committed"];
-var phasesIndex = ["Preclinical","Phase 1","Phase 2","Phase 3","NDA"];
+var phasesIndex = ["NDA","Phase 3","Phase 2","Phase 1", "Preclinical"]; //Order needs to be reversed; easier to send a reversed index than to figure out which indices need to be reversed
 var compoundsIndex = ["ATH-235","CNS-025","CNS-072","CNS-534","CNS-612","CNS-785","CNS-956","CNS-989","ENDC-522","ENDC-560","ENDC-867","ENDC-920","IMM-060","IMM-165","IMM-211","IMM-455","OPTH-001","OPTH-244"];
 var indicationsIndex = ["Acne","Acute Migraine","Acute Pain","Alopecia","Alzheimer's disease","Ankylosing Spondylitis","Anxiety Disorder","Cognitive Impairment","Diabetes Mellitus","Diabetic Nephropathy","Glaucoma","Goiter","Lambert-Eaton Syndrome","Muscular Disorder","Myxedema","Psoriasis","Rheumatoid Arthritis","Sjogren's Sydrome","Smoking Cessation","Thyroid nodules"];
 var titles = [{"tas":"TA"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},{"phases":"Phase"},{"compounds":"Compound"},{"indications":"Indication"}];
@@ -207,6 +207,7 @@ function doTheD3() {
       d.z = +d[myLayout.z];
       d.cFill = d[myLayout.cFill];
       d.cat = d.x + ' ' + d.y; //This is what we'll use to figure out the square in which the project belongs.
+      d.position = 0; //Placeholder for the project's order in its category
     });
 
     //Create tree data structure
