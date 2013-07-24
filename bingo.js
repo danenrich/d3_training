@@ -247,16 +247,16 @@ function doTheD3() {
           .data(flatData);
 
 //        if (firstTimeAtTheRodeo === 1) {
-/*            bubbles.transition()
-            .duration(3000)
-              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+            bubbles.transition()
+            .duration(1000)
+              .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*((d.position-1) + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
               .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; }) //Positioning the bubbles vertically in the middle of the box              //transition().attr("cx", 50); //function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*(i + 0.5); });  //Positioning the bubbles horizontally on the left, centered in their own personal space
               .attr("r", function(d) {
                 if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
                   {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
                 }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
               .style("fill", function(d) { return color(d.cFill); });
-*/
+
             bubbles.enter()
               .append("circle")
               .attr("class", "dot")
