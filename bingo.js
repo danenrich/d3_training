@@ -33,7 +33,8 @@ var cFill_list = [];
 //Set the margins for the chart
 var margin = {top: 50, right: 150, bottom: 80, left: 150},
     width = 1080 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    height = 600 - margin.top - margin.bottom,
+    staggerLabels = false;
 
 //Using the basic d3 colors
 var color = d3.scale.category10();
@@ -141,7 +142,16 @@ function doTheAxes() {
         .attr("x", width/2 + "px")
         .text(titles.filter(function(d,i) {return titles[i][layout_data["x"]] !== undefined;})[0][layout_data["x"]]);
 
-    $(".x .tick.major").css("font-size","1.5em");
+    //Size the font so it fits
+    var numXBuckets = x_list.length;  //Number of boxes along the x-axis
+    var xBucketSize = width/numXBuckets; //In pixels
+    maxX = d3.max(x_list).length; //Longest word
+    svg.selectAll(".x .tick.major")
+      .filter(":nth-child(even)")
+      .selectAll("text")
+      .attr("font-size", "1.5em")
+      .attr("dy", function(d) {return "2.3em";});
+    //$(".x .tick.major:even").attr("dy",dy + 0.5);//css("font-size","1.5em");
 
    //Create the x-grid
     var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d; }));
