@@ -106,9 +106,11 @@ function doTheLayout(returnMe) {
 //Takes x, y, z, cFill (as strings), returns that index for the selected layout.
 function getSelectedIndex(n) {
   var copiedIndex = eval(layout_data[n]+"Index").slice(0); //Using slice copies the index elements to the new index. Without this we're pointing at the original, and any operations on the pointer will also change the original.
-  alert(n + " values: " + (reverseIndices.indexOf(layout_data[n])!=-1));
+  //alert(n + " values: " + (reverseIndices.indexOf(layout_data[n])!=-1));
   if (reverseIndices.indexOf(layout_data[n])!=-1) {return copiedIndex;} else {return copiedIndex;}  //If the index is identified as one that should be reversed, reverse it.
 }
+
+x_list.forEach(function(d) {console.log(phasesIndex.indexOf(d));});
 
 function doTheAxes() {
     //Populate the x, y, and fill lists with the selected indices
