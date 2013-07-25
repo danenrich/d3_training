@@ -12,7 +12,12 @@ body {
 .axis text {
 	font: 40px;
 }
-
+/*
+.x .tick.major {
+  font-size: 1.1em;
+  fill: red;
+}
+*/
 .dot {
   stroke: #000;
 }

@@ -123,6 +123,7 @@ function doTheAxes() {
         .call(yAxis)
       .append("text")
         .attr("class", "label")
+        .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .attr("y", "-135px")
         .attr("x", -height/2 + "px")
@@ -135,9 +136,12 @@ function doTheAxes() {
         .call(xAxis)
       .append("text")
         .attr("class", "label")
+        .attr("text-anchor", "middle")
         .attr("y", "45px")
         .attr("x", width/2 + "px")
         .text(titles.filter(function(d,i) {return titles[i][layout_data["x"]] !== undefined;})[0][layout_data["x"]]);
+
+    $(".x .tick.major").css("font-size","1.5em");
 
    //Create the x-grid
     var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d; }));
