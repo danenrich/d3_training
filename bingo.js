@@ -103,32 +103,19 @@ function doTheLayout(returnMe) {
   if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}}
 }
 
-
-var axisOrder = [];
 //Takes x, y, z, cFill (as strings), returns that index for the selected layout.
 function getSelectedIndex(n) {
-  var sortedIndex, referenceIndex = [];
-  referenceIndex = eval(layout_data[n]+"Index"); //Pointer to the reference index
-  var copiedIndex = referenceIndex.slice(0); //Using slice copies the index elements to the new index. Without this we're pointing at the original, and any operations on the pointer will also change the original.
-    for (i=0;i<copiedIndex.length;i++) {
-      axisOrder[i]=referenceIndex.indexOf(copiedIndex[i]);
-    }
-  sortedIndex = d3.permute(copiedIndex, axisOrder);
-  return sortedIndex;
-//x_list.forEach(function(d,i) {axisOrder[i] = phasesIndex.indexOf(d);});
-
+  var origIndex = eval(layout_data[n]+"Index"); //Pointer to the original index
+  var copiedIndex = origIndex.slice(0); //Using slice copies the index elements to the new index. Without this we're pointing at the original, and any operations on the pointer will also change the original.
   //alert(n + " values: " + (reverseIndices.indexOf(layout_data[n])!=-1));
-  //if (reverseIndices.indexOf(layout_data[n])!=-1) {return copiedIndex;} else {return copiedIndex;}  //If the index is identified as one that should be reversed, reverse it.
+  if (reverseIndices.indexOf(layout_data[n])!=-1) {return copiedIndex.reverse();} else {return origIndex;}  //If the index is identified as one that should be reversed, reverse it.
 }
-
 
 function doTheAxes() {
     //Populate the x, y, and fill lists with the selected indices
     x_list = getSelectedIndex("x");
     y_list = getSelectedIndex("y");
     cFill_list = getSelectedIndex("cFill");
-
-
 
     //Set the x- and y-axis domains
     xScale.domain(x_list.map(function(d) { return d; }));
