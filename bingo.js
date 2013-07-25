@@ -16,7 +16,7 @@ $(document).ready(function() {
   });
 });
 
-//Indices that we'll need to pull from Analytica
+//Indices that we'll need to pull from Analytica. We always use them in the order in which they're specified.
 var tasIndex = ["CNS","Dermatology","Endocrine Disorder","Immunology","Ophthalmology"];
 var statusesIndex = ["ACTIVE","AUTHORIZED","PLANNED"];
 var bucketsIndex = ["Potential","Considered","Committed"];
@@ -24,9 +24,6 @@ var phasesIndex = ["Preclinical","Phase 1","Phase 2","Phase 3","NDA"];
 var compoundsIndex = ["ATH-235","CNS-025","CNS-072","CNS-534","CNS-612","CNS-785","CNS-956","CNS-989","ENDC-522","ENDC-560","ENDC-867","ENDC-920","IMM-060","IMM-165","IMM-211","IMM-455","OPTH-001","OPTH-244"];
 var indicationsIndex = ["Acne","Acute Migraine","Acute Pain","Alopecia","Alzheimer's disease","Ankylosing Spondylitis","Anxiety Disorder","Cognitive Impairment","Diabetes Mellitus","Diabetic Nephropathy","Glaucoma","Goiter","Lambert-Eaton Syndrome","Muscular Disorder","Myxedema","Psoriasis","Rheumatoid Arthritis","Sjogren's Sydrome","Smoking Cessation","Thyroid nodules"];
 var titles = [{"tas":"TA"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},{"phases":"Phase"},{"compounds":"Compound"},{"indications":"Indication"}];
-
-//Specify which indices should be reversed for the axes. NB: The legend seems to right itself for phases (though not for the others), so not reversing there.
-var reverseIndices = ["phases"];
 
 //delcare global variables for data. this way when they get updated the data will be available globally
 var x_list = [];
@@ -106,9 +103,8 @@ function doTheLayout(returnMe) {
 //Takes x, y, z, cFill (as strings), returns that index for the selected layout.
 function getSelectedIndex(n) {
   var origIndex = eval(layout_data[n]+"Index"); //Pointer to the original index
-  var copiedIndex = origIndex.slice(0); //Using slice copies the index elements to the new index. Without this we're pointing at the original, and any operations on the pointer will also change the original.
-  //alert(n + " values: " + (reverseIndices.indexOf(layout_data[n])!=-1));
-  if (reverseIndices.indexOf(layout_data[n])!=-1) {return copiedIndex.reverse();} else {return origIndex;}  //If the index is identified as one that should be reversed, reverse it.
+  var copiedIndex = origIndex.slice(0);
+  if (n=="x") {return copiedIndex.reverse();} else {return origIndex;} //The x's get reversed when written, so reverse them
 }
 
 function doTheAxes() {
