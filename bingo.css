@@ -1,8 +1,10 @@
 body {
   font-size: 12pt;
   font-family: 'Ubuntu Condensed', sans-serif;
-  /*background-color: #1F77B4;*/
   background: -moz-linear-gradient(top, #1F77B4, #000000);
+  background: -webkit-linear-gradient(top, #1F77B4, #000000);
+  background-image: -ms-linear-gradient(top left, #1F77B4 0%, #000000 100%);
+  background-image: linear-gradient(to bottom right, #1F77B4 0%, #000000 100%);
   margin-bottom: 200px;
 }
 
@@ -23,7 +25,6 @@ body {
 svg {
   background-color: #E6E6E6;
   margin-left: 30px;
-  padding-left: 20px;
 }
 
 .axis path,

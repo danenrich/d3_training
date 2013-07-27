@@ -30,7 +30,7 @@ var y_list = [];
 var cFill_list = [];
 
 //Set the margins for the chart
-var margin = {top: 30, right: 150, bottom: 70, left: 150},
+var margin = {top: 30, right: 150, bottom: 70, left: 180},
     width = 1080 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom,
     xAxisOffset = "1.8em"; //If the x-axis gets crowded, we move things down by this amount
