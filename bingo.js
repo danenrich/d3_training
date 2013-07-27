@@ -10,7 +10,6 @@ $(document).ready(function() {
     $(".y.axis").remove();
     $(".x.axis").remove();
     doTheAxes();
-    //$(".legend").remove();
     doTheLegend();
     doTheD3();
   });
@@ -23,7 +22,7 @@ var bucketsIndex = ["Potential","Considered","Committed"];
 var phasesIndex = ["Preclinical","Phase 1","Phase 2","Phase 3","NDA"];
 var compoundsIndex = ["ATH-235","CNS-025","CNS-072","CNS-534","CNS-612","CNS-785","CNS-956","CNS-989","ENDC-522","ENDC-560","ENDC-867","ENDC-920","IMM-060","IMM-165","IMM-211","IMM-455","OPTH-001","OPTH-244"];
 var indicationsIndex = ["Acne","Acute Migraine","Acute Pain","Alopecia","Alzheimer's disease","Ankylosing Spondylitis","Anxiety Disorder","Cognitive Impairment","Diabetes Mellitus","Diabetic Nephropathy","Glaucoma","Goiter","Lambert-Eaton Syndrome","Muscular Disorder","Myxedema","Psoriasis","Rheumatoid Arthritis","Sjogren's Sydrome","Smoking Cessation","Thyroid nodules"];
-var titles = [{"tas":"TA"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},{"phases":"Phase"},{"compounds":"Compound"},{"indications":"Indication"}];
+var titles = [{"tas":"Therapeutic Area"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},{"phases":"Phase"},{"compounds":"Compound"},{"indications":"Indication"}];
 
 //delcare global variables for data. this way when they get updated the data will be available globally
 var x_list = [];
@@ -31,7 +30,7 @@ var y_list = [];
 var cFill_list = [];
 
 //Set the margins for the chart
-var margin = {top: 50, right: 150, bottom: 80, left: 150},
+var margin = {top: 30, right: 150, bottom: 70, left: 150},
     width = 1080 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom,
     xAxisOffset = "1.8em"; //If the x-axis gets crowded, we move things down by this amount
@@ -90,6 +89,12 @@ var xScale = d3.scale.ordinal().rangeRoundBands([width, 0]);
 var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom");
+
+//Remove ticks
+xAxis.tickSize(0);
+yAxis.tickSize(0);
+xAxis.tickPadding(8);
+yAxis.tickPadding(8);
 
 //pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
 function doTheLayout(returnMe) {
@@ -210,15 +215,20 @@ function doTheLegend() {
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
 
-  legend.append("rect")
-      .attr("x", width - 82)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", color);
+  legend.append("circle")
+      //.attr("x", width - 82)
+      //.attr("width", 18)
+      //.attr("height", 18)
+      .attr("class", "legend_dots")
+      .attr("cx", width - 78)
+      .attr("r", 6)
+      .attr("cy", 10)
+      .style("fill", color)
+      .style("border","1px black solid");
 
   legend.append("text")
-      .attr("x", width - 58)
-      .attr("y", 9)
+      .attr("x", width - 64)
+      .attr("y", 10)
       .attr("dy", ".35em")
       .style("text-anchor", "start")
       .text(function(d) { return d; });
@@ -298,8 +308,6 @@ function doTheD3() {
           .style("fill", function(d) { return color(d.cFill); })
           .append("svg:title")
           .text(function(d) { return d.names; });
-          //.transition()
-          //.duration(3000);
 
         //In case projects leave for some reason
         bubbles.exit()
