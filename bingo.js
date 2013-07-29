@@ -30,7 +30,7 @@ var y_list = [];
 var cFill_list = [];
 
 //Set the margins for the chart
-var margin = {top: 30, right: 150, bottom: 70, left: 180},
+var margin = {top: 30, right: 160, bottom: 70, left: 180},
     width = 1080 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom,
     xAxisOffset = "1.8em"; //If the x-axis gets crowded, we move things down by this amount
@@ -131,7 +131,7 @@ function doTheAxes() {
         .attr("class", "label")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .attr("y", "-135px")
+        .attr("y", "-145px")
         .attr("x", -height/2 + "px")
         .text(titles.filter(function(d,i) {return titles[i][layout_data["y"]] !== undefined;})[0][layout_data["y"]]);
 
@@ -143,7 +143,7 @@ function doTheAxes() {
       .append("text")
         .attr("class", "label")
         .attr("text-anchor", "middle")
-        .attr("y", "45px")
+        .attr("y", "50px")
         .attr("x", width/2 + "px")
         .text(titles.filter(function(d,i) {return titles[i][layout_data["x"]] !== undefined;})[0][layout_data["x"]]);
 
@@ -253,7 +253,7 @@ function doTheD3() {
     });
 
     //sort the data from highest to lowest z and alphabetically by category (though that probably doesn't matter)
-    var flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }).sort(function(d1,d2) {return d3.ascending(d1.cat,d2.cat);}); 
+    var flatData = data.sort(function(d1,d2) { return d3.ascending(-d1.z,-d2.z); }).sort(function(d1,d2) {return d3.ascending(d1.cat,d2.cat);});
 
     //Get unique list of x-y value pairs (e.g. TA-Phase combinations)
     var categories = d3.keys(d3.nest().key(function(d) {return d.cat;}).map(data));
