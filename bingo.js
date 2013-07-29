@@ -9,6 +9,7 @@ $(document).ready(function() {
     doTheLayout();
     $(".y.axis").remove();
     $(".x.axis").remove();
+    $(".z_label").remove();
     doTheAxes();
     doTheLegend();
     doTheD3();
@@ -22,7 +23,7 @@ var bucketsIndex = ["Potential","Considered","Committed"];
 var phasesIndex = ["Preclinical","Phase 1","Phase 2","Phase 3","NDA"];
 var compoundsIndex = ["ATH-235","CNS-025","CNS-072","CNS-534","CNS-612","CNS-785","CNS-956","CNS-989","ENDC-522","ENDC-560","ENDC-867","ENDC-920","IMM-060","IMM-165","IMM-211","IMM-455","OPTH-001","OPTH-244"];
 var indicationsIndex = ["Acne","Acute Migraine","Acute Pain","Alopecia","Alzheimer's disease","Ankylosing Spondylitis","Anxiety Disorder","Cognitive Impairment","Diabetes Mellitus","Diabetic Nephropathy","Glaucoma","Goiter","Lambert-Eaton Syndrome","Muscular Disorder","Myxedema","Psoriasis","Rheumatoid Arthritis","Sjogren's Sydrome","Smoking Cessation","Thyroid nodules"];
-var titles = [{"tas":"Therapeutic Area"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},{"phases":"Phase"},{"compounds":"Compound"},{"indications":"Indication"}];
+var titles = [{"tas":"Therapeutic Area"},{"statuses":"Status"},{"buckets":"Strategic Bucket"},{"phases":"Phase"},{"compounds":"Compound"},{"indications":"Indication"},{"enpvs":"ENPV"},{"npvs":"NPV"}];
 
 //delcare global variables for data. this way when they get updated the data will be available globally
 var x_list = [];
@@ -166,9 +167,18 @@ function doTheAxes() {
 
     if (maxYWord > 19) {
       svg.selectAll(".y .tick.major")
-      .selectAll("text")
+        .selectAll("text")
           .attr("font-size", "8pt");
     }
+
+    //Create a label for the bubble size
+    svg.append("g")
+      .append("text")
+        .attr("class", "z_label")
+        .attr("text-anchor", "left")
+        .attr("y", height + margin.top + margin.bottom - 40 + "px")
+        .attr("x", -margin.left + 10 + "px")
+        .text("Bubble Size: " + titles.filter(function(d,i) {return titles[i][layout_data["z"]] !== undefined;})[0][layout_data["z"]]);
 
    //Create the x-grid
     var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d; }));

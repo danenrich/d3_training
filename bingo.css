@@ -51,7 +51,7 @@ svg {
   stroke-width:2;
 }
 
-.label {
+.label, .z_label {
 	  fill: black;
 	  font-size:1.2em;
 }
