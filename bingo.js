@@ -9,6 +9,7 @@ $(document).ready(function() {
     $(".y.axis").remove();
     $(".x.axis").remove();
     $(".z_label").remove();
+    $(".bubbleLegend").remove();
     doTheAxes();
     doTheLegend();
     doTheD3();
@@ -45,7 +46,7 @@ var pulldownrow = d3.select("body").append("div")
 //Build the layout selector
 var layout_data =[];
 var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cFill:"buckets"}},
-                    {"Compound-Indications":{x:"compounds",y:"indications",z:"npvs",cFill:"tas"}},
+                    {"Compound-Indication":{x:"compounds",y:"indications",z:"npvs",cFill:"tas"}},
                     {"Alignment":{x:"statuses",y:"buckets",z:"npvs",cFill:"phases"}}];
 
 var layout_choice = "Pipeline Balance"; //Text string of selected option
@@ -171,15 +172,6 @@ function doTheAxes() {
         .selectAll("text")
           .attr("font-size", "8pt");
     }
-
-    //Create a label for the bubble size
-    svg.append("g")
-      .append("text")
-        .attr("class", "z_label")
-        .attr("text-anchor", "left")
-        .attr("y", height + margin.top + margin.bottom - 40 + "px")
-        .attr("x", -margin.left + 10 + "px")
-        .text("Bubble Size: " + z_metric);
 
    //Create the x-grid
     var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d; }));
@@ -322,6 +314,25 @@ function doTheD3() {
           .transition()
           .duration(750)
           .remove();
+
+    //Create a label for the bubble size and draw sample bubbles in bottom-right corner
+    svg.append("g")
+      .append("text")
+        .attr("class", "z_label")
+        .attr("text-anchor", "middle")
+        .attr("y", height + margin.top - 100 + "px")
+        .attr("x", width + margin.right/2 + "px")
+        .text("Size: " + z_metric);
+      
+    svg.append("g")
+      .append("circle")
+        .attr("id","blah")
+        .attr("class","legBub")
+        .attr("cx", width + margin.right/2)  //Positioning the bubbles horizontally on the left, centered in their own personal space
+        .attr("cy", height) 
+        .attr("r", 10);
+
+
   });
 }
 

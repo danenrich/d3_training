@@ -1,7 +1,7 @@
 body {
   font-size: 12pt;
-  font-family: 'Roboto Condensed', 'Ubuntu Condensed', sans-serif;
-  background-color: #1F77B4;
+  font-family: 'Ubuntu Condensed', sans-serif;
+  background-color: #FFFFFF;
   margin-bottom: 200px;
 }
 
@@ -11,17 +11,17 @@ body {
 
 .pulldownlabel {
   margin-right: 5px;
-  color: #E6E6E6;
+  color: #000;
 }
 
 #pulldown_layout {
-  font-family: 'Roboto Condensed', 'Ubuntu Condensed', sans-serif; 
+  font-family: 'Ubuntu Condensed', sans-serif; 
   font-size: 11pt;
-  background-color: #E6E6E6;
+  background-color: #F2F2F2;
 }
 
 svg {
-  background-color: #E6E6E6;
+  background-color: #F2F2F2;
   margin-left: 30px;
 }
 
@@ -54,4 +54,10 @@ svg {
 .label, .z_label {
 	  fill: black;
 	  font-size:1.2em;
+}
+
+.legBub {
+  fill: none;
+  stroke: #000;
+  stroke-width:1;  
 }
