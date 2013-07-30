@@ -4,7 +4,6 @@ $(document).ready(function() {
 
   //doing this because the .on("change", change_layout) doesn't seem to be working
   $("#pulldown_layout").change(function() {
-    firstTimeAtTheRodeo = 0;
     layout_choice = $(this).val();
     doTheLayout();
     $(".y.axis").remove();
@@ -51,25 +50,26 @@ var layout_choices = [{"Pipeline Balance": {x:"phases",y:"tas",z:"enpvs",cFill:"
 
 var layout_choice = "Pipeline Balance"; //Text string of selected option
 
-//build the drop-down for choosing the layout
-var layout_dropdown = d3.select(".pulldownrow")
-  //add label
-  .append("div")
-    .attr("class", "pulldownlabel")
-    .text("Choose Layout: ")
-  //add drop-down
-  .append("select")
-    .attr("id", "pulldown_layout");
-    //.on("change", change_layout) doesn't seem to be applying, so doing in jquery
+function doTheDropDown() {
+  //build the drop-down for choosing the layout
+  var layout_dropdown = d3.select(".pulldownrow")
+    //add label
+    .append("div")
+      .attr("class", "pulldownlabel")
+      .text("Choose Layout: ")
+    //add drop-down
+    .append("select")
+      .attr("id", "pulldown_layout");
+      //.on("change", change_layout) doesn't seem to be applying, so doing in jquery
 
-//add options to dropdown
-var layout_options =  layout_dropdown.selectAll("option")
-  .data(doTheLayout("strings"))
-  .enter()
-    .append("option")
-    .attr("class", "pulldownoption")
-    .text(function(d){ return d; });
-
+  //add options to dropdown
+  var layout_options =  layout_dropdown.selectAll("option")
+    .data(layout_strings)
+    .enter()
+      .append("option")
+      .attr("class", "pulldownoption")
+      .text(function(d){ return d; });
+}
 
 //Drop the SVG object after the pulldowns
 var svg = d3.select("body").append("svg")
@@ -100,7 +100,8 @@ yAxis.tickPadding(8);
 //pick the layout you want. parameters: "strings" returns an array of strings representing layout choices. "data" returns the x,y,z,colorfill data. A null parameter returns nothing; it simply invokes a new layout.
 function doTheLayout(returnMe) {
   layout_data = layout_choices.filter(function(d,i) {return layout_choices[i][layout_choice] !== undefined;})[0][layout_choice];  //The x,y,z,fill for the selected layout
-  var layout_strings = []; //layout_strings is an array of the layout options as text strings
+  z_metric = titles.filter(function(d,i) {return titles[i][layout_data["z"]] !== undefined;})[0][layout_data["z"]]; //The title for the z-metric; gloal variable //This needs to be global because used in axes and bubble
+  layout_strings = []; //layout_strings is an array of the layout options as text strings
   for(i=0;i<layout_choices.length;i++) {
     layout_strings[i] = d3.keys(layout_choices[i]);
   }
@@ -163,7 +164,7 @@ function doTheAxes() {
     }
 
     //Shrink the y-axis label text when the longest word is too long. this is fairly crude in that it's a binary "big or small" thing, but we don't need it to do better this second
-    maxYWord = d3.max(y_list, function(d) {return d.length;}); //Length of longest word in y-axis labels
+    var maxYWord = d3.max(y_list, function(d) {return d.length;}); //Length of longest word in y-axis labels
 
     if (maxYWord > 19) {
       svg.selectAll(".y .tick.major")
@@ -178,7 +179,7 @@ function doTheAxes() {
         .attr("text-anchor", "left")
         .attr("y", height + margin.top + margin.bottom - 40 + "px")
         .attr("x", -margin.left + 10 + "px")
-        .text("Bubble Size: " + titles.filter(function(d,i) {return titles[i][layout_data["z"]] !== undefined;})[0][layout_data["z"]]);
+        .text("Bubble Size: " + z_metric);
 
    //Create the x-grid
     var xgrid = svg.selectAll('.xgrid').data(x_list.map(function(d) { return d; }));
@@ -226,9 +227,6 @@ function doTheLegend() {
       .attr("transform", function(d, i) { return "translate(100," + i * 25 + ")"; });
 
   legend.append("circle")
-      //.attr("x", width - 82)
-      //.attr("width", 18)
-      //.attr("height", 18)
       .attr("class", "legend_dots")
       .attr("cx", width - 78)
       .attr("r", 6)
@@ -244,20 +242,16 @@ function doTheLegend() {
       .text(function(d) { return d; });
 }
 
-var myLayout = [];
-
 function doTheD3() {
-
-  var myLayout = doTheLayout("data");
 
   //Get the data and start drawing
   d3.csv("bingo_data.csv", function(error, data) {
     data.forEach(function(d) {
       d.names = d.names;
-      d.y = d[myLayout.y];
-      d.x = d[myLayout.x];
-      d.z = +d[myLayout.z];
-      d.cFill = d[myLayout.cFill];
+      d.y = d[layout_data.y];
+      d.x = d[layout_data.x];
+      d.z = +d[layout_data.z];
+      d.cFill = d[layout_data.cFill];
       d.cat = d.x + ' ' + d.y; //This is what we'll use to figure out the square in which the project belongs.
       d.position = 0; //Placeholder for the project's order in its category
     });
@@ -303,21 +297,25 @@ function doTheD3() {
             if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
               {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
             }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-          .style("fill", function(d) { return color(d.cFill); });
+          .style("fill", function(d) { return color(d.cFill); })
+          
+          //Relabel the bubbles
+          svg.selectAll("title").transition()
+            .text(function(d) { return 'Project: ' + d.names + '\n' + z_metric + ': ' + Math.round(d.z,0); });
 
         //Draw new bubbles
         bubbles.enter()
           .append("circle")
-          .attr("class", "dot")
-          .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*((d.position-1) + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
-          .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box	
-          .attr("r", function(d) {
-            if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
-              {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
-            }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-          .style("fill", function(d) { return color(d.cFill); })
+            .attr("class", "dot")
+            .attr("cx", function(d, i) { return xScale(d.x) + (xSpace + bubble_padding)*((d.position-1) + 0.5); })  //Positioning the bubbles horizontally on the left, centered in their own personal space
+            .attr("cy", function(d) { return yScale(d.y) + yScale.rangeBand()/2; })  //Positioning the bubbles vertically in the middle of the box	
+            .attr("r", function(d) {
+              if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
+                {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
+              }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
+            .style("fill", function(d) { return color(d.cFill); })
           .append("svg:title")
-          .text(function(d) { return d.names; });
+            .text(function(d) { return 'Project: ' + d.names + '\n' + z_metric + ': ' + Math.round(d.z,0); });
 
         //In case projects leave for some reason
         bubbles.exit()
@@ -327,6 +325,8 @@ function doTheD3() {
   });
 }
 
+doTheLayout();
+doTheDropDown(); //Only need to call this on page load
 doTheAxes();
 doTheD3(); //doTheLayout() is embedded in here
 doTheLegend();
