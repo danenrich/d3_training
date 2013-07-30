@@ -106,7 +106,6 @@ function doTheLayout(returnMe) {
   for(i=0;i<layout_choices.length;i++) {
     layout_strings[i] = d3.keys(layout_choices[i]);
   }
-  if (returnMe==='strings') {return layout_strings;} else {if (returnMe ==='data') {return layout_data;}}
 }
 
 //Takes x, y, z, cFill (as strings), returns that index for the selected layout.
@@ -315,24 +314,41 @@ function doTheD3() {
           .duration(750)
           .remove();
 
-    //Create a label for the bubble size and draw sample bubbles in bottom-right corner
-    svg.append("g")
-      .append("text")
-        .attr("class", "z_label")
-        .attr("text-anchor", "middle")
-        .attr("y", height + margin.top - 100 + "px")
-        .attr("x", width + margin.right/2 + "px")
-        .text("Size: " + z_metric);
-      
-    svg.append("g")
-      .append("circle")
-        .attr("id","blah")
-        .attr("class","legBub")
-        .attr("cx", width + margin.right/2)  //Positioning the bubbles horizontally on the left, centered in their own personal space
-        .attr("cy", height) 
-        .attr("r", 10);
-
-
+    //Create a label for the bubble size    
+      svg.append("g")
+        .append("text")
+          .attr("class", "z_label")
+          .attr("text-anchor", "middle")
+          .attr("y", height + margin.top - 100 + "px")
+          .attr("x", width + margin.right/2 + "px")
+          .text("Size: " + z_metric);
+        
+      //draw sample bubbles in bottom-right corner
+      legBubSizes = [max_size,(max_size+min_size)/2,min_size];
+      //This is the js equivalent of cumulate
+      blah = [];  //{15,9,3}  {0,17,17+11}
+      var bubPad = 5;
+      for (i=0;i<legBubSizes.length;i++) {
+        if (i==0) {blah[i] = 0;} else {blah[i] = (legBubSizes[i-1] + legBubSizes[i])/2;};
+      }
+        
+      svg.selectAll("legBub")
+        .data(legBubSizes)
+        .enter()
+        .append("circle")
+          .attr("class","legBub")
+          .attr("cx", width + margin.right/2 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
+          .attr("cy", function(d,i) {if (i==0) {return height;} else {return height + (legBubSizes[i] + legBubSizes[i-1])/2;}})
+          .attr("r", function(d) {return d;})
+       
+       svg.selectAll("legBubText")
+        .data(legBubSizes)
+        .enter()
+        .append("text")
+          .attr("class","legBubText")
+          .attr("x", width + margin.right/2)  //Positioning the bubbles horizontally on the left, centered in their own personal space
+          .attr("y", height + max_size )
+          .text("blah");
   });
 }
 

@@ -61,3 +61,9 @@ svg {
   stroke: #000;
   stroke-width:1;  
 }
+
+.legBubText {
+  fill: black;
+  font-size:0.5em;
+  z-index: -1;
+}
