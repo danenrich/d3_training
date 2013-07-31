@@ -1,7 +1,7 @@
 body {
   font-size: 12pt;
   font-family: 'Ubuntu Condensed', sans-serif;
-  background-color: #FFFFFF;
+  background-color: #F2F2F2;
   margin-bottom: 200px;
 }
 
@@ -17,11 +17,11 @@ body {
 #pulldown_layout {
   font-family: 'Ubuntu Condensed', sans-serif; 
   font-size: 11pt;
-  background-color: #F2F2F2;
+  background-color: #FFFFFF;
 }
 
 svg {
-  background-color: #F2F2F2;
+  background-color: #FFFFFF;
   margin-left: 30px;
 }
 
@@ -64,6 +64,6 @@ svg {
 
 .legBubText {
   fill: black;
-  font-size:0.5em;
+  font-size:0.8em;
   z-index: -1;
 }

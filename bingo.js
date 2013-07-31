@@ -10,6 +10,7 @@ $(document).ready(function() {
     $(".x.axis").remove();
     $(".z_label").remove();
     $(".bubbleLegend").remove();
+    $(".legBub, .legBubText").remove();
     doTheAxes();
     doTheLegend();
     doTheD3();
@@ -314,44 +315,51 @@ function doTheD3() {
           .duration(750)
           .remove();
 
+        
+      //draw sample bubbles in bottom-right corner
+      legBubSizes = [max_size,(max_size+min_size)/2,min_size];
+      //Figure out how to space the bubbles
+      cumBubSize = [];  
+      cumBubOffset = [];  
+      var bubPad = 5;
+      var baseBubOffset = 50;
+      for (i=0;i<legBubSizes.length;i++) {
+        //cumBubOffset is the amount by which the bubbles need to be offset to space them correctly
+        if (i==0) {cumBubOffset[i] = 0;} else {cumBubOffset[i] = runningTotal + (legBubSizes[i-1] + legBubSizes[i]);};
+        var runningTotal = cumBubOffset[i];
+        //cumBubSize is the amount by which the text needs an additional offset
+        if (i==0) {cumBubSize[i] = 0;} else {cumBubSize[i] = (cumBubSize[i-1] + legBubSizes[i]);};
+      }
+        
     //Create a label for the bubble size    
       svg.append("g")
         .append("text")
           .attr("class", "z_label")
           .attr("text-anchor", "middle")
-          .attr("y", height + margin.top - 100 + "px")
+          .attr("y", height + (margin.top - baseBubOffset -55) + "px")
           .attr("x", width + margin.right/2 + "px")
           .text("Size: " + z_metric);
-        
-      //draw sample bubbles in bottom-right corner
-      legBubSizes = [max_size,(max_size+min_size)/2,min_size];
-      offsetme = [0,24,36];
-      //This is the js equivalent of cumulate
-      blah = [];  //{15,9,3}  {0,17,17+11}
-      var bubPad = 5;
-      for (i=0;i<legBubSizes.length;i++) {
-        if (i==0) {blah[i] = 0;} else {blah[i] = runningTotal + (legBubSizes[i-1] + legBubSizes[i]);};
-        var runningTotal = blah[i];
-      }
-        
+
+      //Draw the reference circles for the bubble size
       svg.selectAll("legBub")
         .data(legBubSizes)
         .enter()
         .append("circle")
           .attr("class","legBub")
-          .attr("cx", width + margin.right/2 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
+          .attr("cx", width + margin.right/2 - max_size/2 - 5 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
           //.attr("cy", function(d,i) {return height + offsetme[i];})
-          .attr("cy", function(d,i) {if (i==0) {return height;} else {return height + blah[i];}})
+          .attr("cy", function(d,i) {if (i==0) {return height - baseBubOffset;} else {return height -baseBubOffset + cumBubOffset[i] + bubPad*i ;}})
           .attr("r", function(d) {return d;})
        
+       //Draw the reference text for the bubble size
        svg.selectAll("legBubText")
         .data(legBubSizes)
         .enter()
         .append("text")
           .attr("class","legBubText")
-          .attr("x", width + margin.right/2)  //Positioning the bubbles horizontally on the left, centered in their own personal space
-          .attr("y", height + max_size )
-          .text("blah");
+          .attr("x", width + margin.right/2 + max_size/2 + 5 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
+          .attr("y", function(d,i) {if (i==0) {return height -baseBubOffset + d/2;} else {return height - baseBubOffset + cumBubOffset[i] + bubPad*i + cumBubSize[1]/2;}})
+          .text(function(d) {return Math.round(d,0);});
   });
 }
 
