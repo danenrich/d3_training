@@ -325,11 +325,13 @@ function doTheD3() {
         
       //draw sample bubbles in bottom-right corner
       legBubSizes = [max_size,(max_size+min_size)/2,min_size];
+      offsetme = [0,24,36];
       //This is the js equivalent of cumulate
       blah = [];  //{15,9,3}  {0,17,17+11}
       var bubPad = 5;
       for (i=0;i<legBubSizes.length;i++) {
-        if (i==0) {blah[i] = 0;} else {blah[i] = (legBubSizes[i-1] + legBubSizes[i])/2;};
+        if (i==0) {blah[i] = 0;} else {blah[i] = runningTotal + (legBubSizes[i-1] + legBubSizes[i]);};
+        var runningTotal = blah[i];
       }
         
       svg.selectAll("legBub")
@@ -338,7 +340,8 @@ function doTheD3() {
         .append("circle")
           .attr("class","legBub")
           .attr("cx", width + margin.right/2 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
-          .attr("cy", function(d,i) {if (i==0) {return height;} else {return height + (legBubSizes[i] + legBubSizes[i-1])/2;}})
+          //.attr("cy", function(d,i) {return height + offsetme[i];})
+          .attr("cy", function(d,i) {if (i==0) {return height;} else {return height + blah[i];}})
           .attr("r", function(d) {return d;})
        
        svg.selectAll("legBubText")
