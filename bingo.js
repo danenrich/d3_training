@@ -330,7 +330,7 @@ function doTheD3() {
         //cumBubSize is the amount by which the text needs an additional offset
         if (i==0) {cumBubSize[i] = 0;} else {cumBubSize[i] = (cumBubSize[i-1] + legBubSizes[i]);};
       }
-        
+
     //Create a label for the bubble size    
       svg.append("g")
         .append("text")
@@ -338,13 +338,15 @@ function doTheD3() {
           .attr("text-anchor", "middle")
           .attr("y", height + (margin.top - baseBubOffset -55) + "px")
           .attr("x", width + margin.right/2 + "px")
-          .text("Size: " + z_metric);
+          .text(z_metric);
 
       //Draw the reference circles for the bubble size
-      svg.selectAll("legBub")
+      var refLegend = svg.selectAll("legBub")
         .data(legBubSizes)
         .enter()
-        .append("circle")
+        .append("g");
+
+        refLegend.append("circle")
           .attr("class","legBub")
           .attr("cx", width + margin.right/2 - max_size/2 - 5 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
           //.attr("cy", function(d,i) {return height + offsetme[i];})
@@ -352,14 +354,14 @@ function doTheD3() {
           .attr("r", function(d) {return d;})
        
        //Draw the reference text for the bubble size
-       svg.selectAll("legBubText")
-        .data(legBubSizes)
-        .enter()
-        .append("text")
+        refLegend.append("text")
           .attr("class","legBubText")
           .attr("x", width + margin.right/2 + max_size/2 + 5 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
-          .attr("y", function(d,i) {if (i==0) {return height -baseBubOffset + d/2;} else {return height - baseBubOffset + cumBubOffset[i] + bubPad*i + cumBubSize[1]/2;}})
+          .attr("y", function(d,i) {if (i==0) {return height -baseBubOffset;} else {return height - baseBubOffset + cumBubOffset[i] + bubPad*i;}})
+          .attr("dy", ".35em" )
+          //.attr("y", function(d,i) {if (i==0) {return height -baseBubOffset + d/2;} else {return height - baseBubOffset + cumBubOffset[i] + bubPad*i + cumBubSize[1]/2;}})
           .text(function(d) {return Math.round(d,0);});
+
   });
 }
 
