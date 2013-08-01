@@ -289,8 +289,8 @@ function doTheD3() {
             if (max_z === min_z) {return max_size;} else //If all bubbles are the same, don't bother with math
               {if (d.z < 0) {return min_size;} else {return (d.z-min_z)/(max_z-min_z)*(max_size-min_size)+min_size;}}
             }) //Taking the squares of the bubble sizes (to reflect area) and normalizing to min & max values
-          .style("fill", function(d) { return color(d.cFill); })
-          
+          .style("fill", function(d) { return color(d.cFill); });
+
           //Relabel the bubbles
           svg.selectAll("title").transition()
             .text(function(d) { return 'Project: ' + d.names + '\n' + z_metric + ': ' + Math.round(d.z,0); });
@@ -315,20 +315,20 @@ function doTheD3() {
           .duration(750)
           .remove();
 
-        
+
       //draw sample bubbles in bottom-right corner
       legBubSizes = [max_size,(max_size+min_size)/2,min_size];
       //Figure out how to space the bubbles
-      cumBubSize = [];  
-      cumBubOffset = [];  
+      cumBubSize = [];
+      cumBubOffset = [];
       var bubPad = 5;
-      var baseBubOffset = 50;
+      var baseBubOffset = max_size*2;
       for (i=0;i<legBubSizes.length;i++) {
         //cumBubOffset is the amount by which the bubbles need to be offset to space them correctly
-        if (i==0) {cumBubOffset[i] = 0;} else {cumBubOffset[i] = runningTotal + (legBubSizes[i-1] + legBubSizes[i]);};
+        if (i===0) {cumBubOffset[i] = 0;} else {cumBubOffset[i] = runningTotal + (legBubSizes[i-1] + legBubSizes[i]);}
         var runningTotal = cumBubOffset[i];
         //cumBubSize is the amount by which the text needs an additional offset
-        if (i==0) {cumBubSize[i] = 0;} else {cumBubSize[i] = (cumBubSize[i-1] + legBubSizes[i]);};
+        if (i===0) {cumBubSize[i] = 0;} else {cumBubSize[i] = (cumBubSize[i-1] + legBubSizes[i]);}
       }
 
     //Create a label for the bubble size    
@@ -350,14 +350,14 @@ function doTheD3() {
           .attr("class","legBub")
           .attr("cx", width + margin.right/2 - max_size/2 - 5 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
           //.attr("cy", function(d,i) {return height + offsetme[i];})
-          .attr("cy", function(d,i) {if (i==0) {return height - baseBubOffset;} else {return height -baseBubOffset + cumBubOffset[i] + bubPad*i ;}})
-          .attr("r", function(d) {return d;})
-       
+          .attr("cy", function(d,i) {if (i===0) {return height - baseBubOffset;} else {return height -baseBubOffset + cumBubOffset[i] + bubPad*i ;}})
+          .attr("r", function(d) {return d;});
+
        //Draw the reference text for the bubble size
         refLegend.append("text")
           .attr("class","legBubText")
           .attr("x", width + margin.right/2 + max_size/2 + 5 + "px")  //Positioning the bubbles horizontally on the left, centered in their own personal space
-          .attr("y", function(d,i) {if (i==0) {return height -baseBubOffset;} else {return height - baseBubOffset + cumBubOffset[i] + bubPad*i;}})
+          .attr("y", function(d,i) {if (i===0) {return height -baseBubOffset;} else {return height - baseBubOffset + cumBubOffset[i] + bubPad*i;}})
           .attr("dy", ".35em" )
           //.attr("y", function(d,i) {if (i==0) {return height -baseBubOffset + d/2;} else {return height - baseBubOffset + cumBubOffset[i] + bubPad*i + cumBubSize[1]/2;}})
           .text(function(d) {return Math.round(d,0);});
