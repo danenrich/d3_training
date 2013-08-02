@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="d3/d3.v3.js"></script>
+  <link rel="StyleSheet" href="bingo.css" type="text/css" />
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed|Roboto+Condensed|Open+Sans|Share' rel='stylesheet' type='text/css'>
+
+<script>  	
+
+var options = ['Efficacy','Biomarker','Medical Need','Stopping','Safety','Regulation','Label','Change Ability to Manage','PRO','Compendia','Relative Price','Treatment Alternatives','Relative Total Cost','Off-label Use','Prevalence','Rebating','Benefit','Societal/KOL Pressure'];
+
+var pulldownrow = d3.select("body")
+	.data(options)
+	.enter()
+	.append("g");
+
+	pulldownrow
+	.append("div")
+	.attr("class","myclass")
+	.html(function (d) {return '<span><input type="checkbox"/></span>' + '<span>' + d + '</span><br/>';});
+
+  
+//pulldownrow.selectAll("")
+
+$(document).ready(function() {
+  //set default value
+
+});
+</script>
+<style>
+.myclass {
+	position: relative;
+	display: block;
+}
+
+g {
+	width: 100%;
+}
+</style>
+</head>
+
+<body>
+
+</body>
